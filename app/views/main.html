@@ -1,0 +1,46 @@
+<div ng-controller="MainCtrl">
+
+<p class="lead">
+  Find local community groups to help with your housing issues.
+</p>
+
+<div class="addr-search row">
+    <form ng-submit="searchAddr()">
+      <label class="col-sm-12 control-label" for="addrSearch">Enter your address:</label>
+      <div class="col-sm-12">
+        <div class="input-group input-group-lg">
+          <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ng-click="searchAddr()">Go!</button>
+          </span>
+        </div><!-- /input-group -->
+      </div>
+    </form>
+</div>
+
+<carto-map></carto-map>
+
+<div ng-if="resources">
+  <p class="lead">
+    Groups in your area:
+
+    <div ng-repeat="r in resources" class="panel resources-panel">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
+      </div>
+      <div class="panel-body">
+        <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
+        <p class="services">{{ r.services }}</p>
+        <a  class="btn btn-success btn-block"
+            ng-href="tel:{{ r.contact_information }}">
+            <span class="glyphicon glyphicon-earphone pull-left"></span>
+            {{ r.contact_information | tel }}
+        </a>
+      </div>
+    </div>
+
+
+  </p>
+</div>
+
+</div>
