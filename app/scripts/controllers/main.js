@@ -13,7 +13,7 @@ angular.module('localResourcesApp')
   .controller('MainCtrl', ['$scope', '$window', 'CartoDB', function ($scope, $window, CartoDB) {
 
     $scope.user = {};
-    $scope.user.address = '654 park place brooklyn';
+    //$scope.user.address = '654 park place brooklyn';
 
 
     if(!$window.Geocoder) alert('warning: no geocoder set');
