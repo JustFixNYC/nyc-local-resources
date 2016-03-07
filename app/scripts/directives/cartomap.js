@@ -28,6 +28,16 @@ angular.module('localResourcesApp')
         });
         map.addLayer(layer);
 
+        var mapbox_token = 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw';
+
+        // L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw';
+        // // Replace 'mapbox.streets' with your map id.
+        // var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
+        //     attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        // });
+        // var map = L.map('map')
+        //     .addLayer(mapboxTiles);
+
         map.on('click', function(e) {
             var tempLat = e.latlng.lat;
             var tempLng = e.latlng.lng;
@@ -67,9 +77,11 @@ angular.module('localResourcesApp')
             console.log("An error occurred: " + err);
           });
 
-        scope.updateCartoMap = function(lat, lng) {
+        scope.updateCartoMap = function(lat, lng, borough) {
 
-          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT bcl.cartodb_id, bcl.the_geom, bcl.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, bcl.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM brooklyn_cbos_locations AS bcl, brooklyn_cbos AS bc WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), bc.the_geom ) AND bc.cartodb_id = bcl.cartodb_id AND bcl.service_area_type NOT IN ('borough') ORDER BY dist ASC ) T";
+          var boroughString = borough ? '' : 'NOT';
+          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT bcl.cartodb_id, bcl.the_geom, bcl.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, bcl.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM brooklyn_cbos_locations AS bcl, brooklyn_cbos AS bc WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), bc.the_geom ) AND bc.cartodb_id = bcl.cartodb_id AND bcl.service_area_type " + boroughString + " IN ('borough') ORDER BY dist ASC ) T";
+
           if(userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng]);
           userMarker.addTo(map);

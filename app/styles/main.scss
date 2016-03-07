@@ -20,6 +20,13 @@ body {
     background-color: #f1f2f6;
 }
 
+
+#map {
+  width: 100%;
+  height: 45vh;
+  margin: 30px auto;
+}
+
 .lead {
   margin-bottom: 10px;
 }
@@ -28,20 +35,55 @@ body {
   font-weight: bold;
 }
 
+
+.btn-block {
+  max-width: 300px;
+  margin: 20px auto 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
 .addr-search {
 
   .form-group {
     margin-bottom: 0;
   }
 
+  .glyphicon.spinning {
+    -webkit-animation: spin2 1s infinite linear;
+    animation: spin 1s infinite linear;
+
+
+  }
+
+  @keyframes spin {
+      from { transform: scale(1) rotate(0deg); }
+      to { transform: scale(1) rotate(360deg); }
+  }
+
+  @-webkit-keyframes spin2 {
+      from { -webkit-transform: rotate(0deg); }
+      to { -webkit-transform: rotate(360deg); }
+  }
+
+}
+
+.error-text {
+  font-weight: bold;
+  color: #a94442;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.borough-toggle {
+  margin-bottom: 15px;
 }
 
 
-#map {
-  width: 100%;
-  height: 45vh;
-  margin: 30px auto;
-}
+
+
+
 
 
 

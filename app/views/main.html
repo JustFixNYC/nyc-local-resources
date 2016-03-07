@@ -1,46 +1,78 @@
 <div ng-controller="MainCtrl">
 
 <p class="lead">
-  Find local community groups to help with your housing issues.
+  Find community groups and legal services to help with your housing issues.
 </p>
 
 <div class="addr-search row">
     <form ng-submit="searchAddr()">
-      <label class="col-sm-12 control-label" for="addrSearch">Enter your address:</label>
+      <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to find your location or enter your address:</label>
       <div class="col-sm-12">
         <div class="input-group input-group-lg">
           <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
           <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ng-click="searchAddr()">Go!</button>
+            <button class="btn btn-success" type="button" ng-click="searchGeolocation()">
+              <span ng-class="user.loadingLoc ? 'glyphicon-refresh spinning' : 'glyphicon-map-marker'" class="glyphicon"></span>
+            </button>
+            <button class="btn btn-primary" type="button" ng-click="searchAddr()">Go</button>
           </span>
         </div><!-- /input-group -->
       </div>
     </form>
 </div>
 
-<carto-map></carto-map>
-
-<div ng-if="resources">
-  <p class="lead">
-    Groups in your area:
-
-    <div ng-repeat="r in resources" class="panel resources-panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
-      </div>
-      <div class="panel-body">
-        <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
-        <p class="services">{{ r.services }}</p>
-        <a  class="btn btn-success btn-block"
-            ng-href="tel:{{ r.contact_information }}">
-            <span class="glyphicon glyphicon-earphone pull-left"></span>
-            {{ r.contact_information | tel }}
-        </a>
-      </div>
-    </div>
-
-
+<div ng-if="error">
+  <p class="error-text">
+    Error! Please make sure you've entered a specific address.
   </p>
 </div>
+
+<carto-map></carto-map>
+
+<div ng-if="resources && resources.length > 0">
+
+  <label class="control-label">Show groups in:</label>
+  <!-- <div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default">My neighborhood</button>
+    </div>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default">My borough</button>
+    </div>
+  </div> -->
+
+  <div class="btn-group btn-group-justified borough-toggle">
+      <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My neighborhood</label>
+      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
+  </div>
+
+  <!-- <p class="lead">
+    Groups in {{ user.byBorough ? user.borough : 'your area' }}:
+    </p>
+    <a class="pull-right" ng-if="user.byBorough" ng-click="toggleBorough()">Show resources local to me.</a>
+    <a class="pull-right" ng-if="!user.byBorough" ng-click="toggleBorough()">Show other resources for {{ user.borough }}.</a> -->
+
+  <div ng-repeat="r in resources" class="panel resources-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
+    </div>
+    <div class="panel-body">
+      <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
+      <p class="services">{{ r.services }}</p>
+      <a  class="btn btn-success btn-block"
+          ng-href="tel:{{ r.contact_information }}">
+          <span class="glyphicon glyphicon-earphone pull-left"></span>
+          {{ r.contact_information | tel }}
+      </a>
+    </div>
+  </div>
+</div>
+<div ng-if="resources.length == 0">
+  <p class="error-text lead">
+    Nothing found! Please try a different address.
+  </p>
+  <br /><br />
+</div>
+
 
 </div>
