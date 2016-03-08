@@ -13,9 +13,9 @@ angular.module('localResourcesApp')
   .controller('MainCtrl', ['$scope', '$window', 'CartoDB', function ($scope, $window, CartoDB) {
 
     $scope.user = {};
-    //$scope.user.address = '654 park place brooklyn';
+    $scope.user.address = '654 park place brooklyn';
     $scope.user.loadingLoc = false;
-    $scope.user.byBorough = false;
+    $scope.user.byLegal = false;
     // $scope.hasLocal = true;
 
 
@@ -58,6 +58,7 @@ angular.module('localResourcesApp')
             $scope.update();
           } else {
             $scope.error = true;
+            $scope.user.loadingLoc = false;
             $scope.$apply();
             console.error('Geocode was not successful for the following reason: ' + status);
           }
@@ -65,16 +66,16 @@ angular.module('localResourcesApp')
       });
     }
 
-    $scope.toggleBorough = function(byBorough) {
-      $scope.user.byBorough = byBorough;
+    $scope.toggleOrgType = function(byLegal) {
+      $scope.user.byLegal = byLegal;
       $scope.update();
     };
 
     $scope.update = function() {
       var lat = $scope.user.lat;
       var lng = $scope.user.lng;
-      $scope.updateCartoMap(lat, lng, $scope.user.byBorough);
-      $scope.updateCartoList(lat, lng, $scope.user.byBorough);
+      $scope.updateCartoMap(lat, lng, $scope.user.byLegal);
+      $scope.updateCartoList(lat, lng, $scope.user.byLegal);
     };
 
     $scope.updateCartoList = function(lat, lng, borough) {

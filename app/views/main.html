@@ -44,10 +44,10 @@
 <div ng-if="resources && resources.length > 0">
 
   <!-- <div ng-if="hasLocal"> -->
-    <label class="control-label">Show groups in:</label>
-    <div class="btn-group btn-group-justified borough-toggle">
-        <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My neighborhood</label>
-        <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
+    <!-- <label class="control-label">Show groups in:</label> -->
+    <div class="btn-group btn-group-justified org-type-toggle">
+        <label class="btn btn-primary" ng-class="{ active: !user.byLegal }" ng-click="toggleOrgType(false)">Community groups</label>
+        <label class="btn btn-primary" ng-class="{ active: user.byLegal }" ng-click="toggleOrgType(true)">Legal services</label>
         <!-- <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">Hotlines</label> -->
     </div>
   <!-- </div> -->

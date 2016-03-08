@@ -81,10 +81,15 @@ angular.module('localResourcesApp')
             console.log("An error occurred: " + err);
           });
 
-        scope.updateCartoMap = function(lat, lng, borough) {
+        scope.updateCartoMap = function(lat, lng, orgType) {
 
-          var boroughString = borough ? '' : 'NOT';
-          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations AS loc, nyc_cbos_service_areas AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND loc.organization = sa.organization AND sa.service_area_type " + boroughString + " IN ('borough') ORDER BY dist ASC ) T LIMIT 10";
+          //var boroughString = borough ? '' : 'NOT';
+          var orgString = orgType ? 'legal' : 'community';
+
+          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations AS loc, nyc_cbos_service_areas AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND loc.organization = sa.organization AND loc.org_type IN ('" + orgString + "') ORDER BY dist ASC ) T LIMIT 10";
+
+
+
           if(userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng]);
           userMarker.addTo(map);
@@ -95,7 +100,7 @@ angular.module('localResourcesApp')
             bounds.push([lat,lng]);
             //console.log(bounds);
           //$rootScope.cartoSQL.getBounds(query).done(function(bounds) {
-            map.fitBounds(bounds, { padding: [25,25] });
+            map.fitBounds(bounds, { padding: [10,10] });
           });
         };
 
