@@ -39,15 +39,19 @@ angular.module('localResourcesApp')
         //     .addLayer(mapboxTiles);
 
         map.on('click', function(e) {
-            var tempLat = e.latlng.lat;
-            var tempLng = e.latlng.lng;
-          //  console.log(tempLng, tempLat);
-            scope.updateCartoMap(tempLat, tempLng);
-            CartoDB.queryByLatLng(tempLat, tempLng).done(function (data) {
-              // console.log(data);
-              scope.resources = data.rows;
-              scope.$apply();
-            });
+            var tempLat = scope.user.lat = e.latlng.lat;
+            var tempLng = scope.user.lng = e.latlng.lng;
+            scope.updateCartoMap(tempLat, tempLng, scope.user.byBorough);
+            scope.updateCartoList(tempLat, tempLng, scope.user.byBorough);
+          //
+          //
+          // //  console.log(tempLng, tempLat);
+          //   scope.updateCartoMap(tempLat, tempLng);
+          //   CartoDB.queryByLatLng(tempLat, tempLng).done(function (data) {
+          //     // console.log(data);
+          //     scope.resources = data.rows;
+          //     scope.$apply();
+          //   });
         });
 
 
@@ -80,8 +84,7 @@ angular.module('localResourcesApp')
         scope.updateCartoMap = function(lat, lng, borough) {
 
           var boroughString = borough ? '' : 'NOT';
-          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT bcl.cartodb_id, bcl.the_geom, bcl.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, bcl.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM brooklyn_cbos_locations AS bcl, brooklyn_cbos AS bc WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), bc.the_geom ) AND bc.cartodb_id = bcl.cartodb_id AND bcl.service_area_type " + boroughString + " IN ('borough') ORDER BY dist ASC ) T";
-
+          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations AS loc, nyc_cbos_service_areas AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND loc.organization = sa.organization AND sa.service_area_type " + boroughString + " IN ('borough') ORDER BY dist ASC ) T LIMIT 10";
           if(userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng]);
           userMarker.addTo(map);

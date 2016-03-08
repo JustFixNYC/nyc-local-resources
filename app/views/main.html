@@ -1,7 +1,7 @@
 <div ng-controller="MainCtrl">
 
 <p class="lead">
-  Find community groups and legal services to help with your housing issues.
+  Find local community groups and legal services to help with your housing issues.
 </p>
 
 <div class="addr-search row">
@@ -26,32 +26,33 @@
     Error! Please make sure you've entered a specific address.
   </p>
 </div>
+<!--
+<div ng-show="resources && resources.length > 0">
+
+  <label class="control-label">Show groups in:</label>
+  <div class="btn-group btn-group-justified borough-toggle">
+      <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My area</label>
+      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
+      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">Hotlines</label>
+  </div>
+</div> -->
 
 <carto-map></carto-map>
 
+
+
 <div ng-if="resources && resources.length > 0">
 
-  <label class="control-label">Show groups in:</label>
-  <!-- <div class="btn-group btn-group-justified" role="group" aria-label="...">
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default">My neighborhood</button>
+  <!-- <div ng-if="hasLocal"> -->
+    <label class="control-label">Show groups in:</label>
+    <div class="btn-group btn-group-justified borough-toggle">
+        <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My neighborhood</label>
+        <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
+        <!-- <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">Hotlines</label> -->
     </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default">My borough</button>
-    </div>
-  </div> -->
+  <!-- </div> -->
 
-  <div class="btn-group btn-group-justified borough-toggle">
-      <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My neighborhood</label>
-      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
-  </div>
-
-  <!-- <p class="lead">
-    Groups in {{ user.byBorough ? user.borough : 'your area' }}:
-    </p>
-    <a class="pull-right" ng-if="user.byBorough" ng-click="toggleBorough()">Show resources local to me.</a>
-    <a class="pull-right" ng-if="!user.byBorough" ng-click="toggleBorough()">Show other resources for {{ user.borough }}.</a> -->
-
+  <!-- <p class="lead">Results:</p> -->
   <div ng-repeat="r in resources" class="panel resources-panel">
     <div class="panel-heading">
       <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
@@ -66,7 +67,9 @@
       </a>
     </div>
   </div>
+
 </div>
+
 <div ng-if="resources.length == 0">
   <p class="error-text lead">
     Nothing found! Please try a different address.

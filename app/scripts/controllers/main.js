@@ -13,9 +13,10 @@ angular.module('localResourcesApp')
   .controller('MainCtrl', ['$scope', '$window', 'CartoDB', function ($scope, $window, CartoDB) {
 
     $scope.user = {};
-    $scope.user.address = '654 park place brooklyn';
+    //$scope.user.address = '654 park place brooklyn';
     $scope.user.loadingLoc = false;
     $scope.user.byBorough = false;
+    // $scope.hasLocal = true;
 
 
     if(!$window.Geocoder) alert('warning: no geocoder set');
@@ -61,9 +62,6 @@ angular.module('localResourcesApp')
             console.error('Geocode was not successful for the following reason: ' + status);
           }
         });
-
-
-
       });
     }
 
@@ -82,9 +80,19 @@ angular.module('localResourcesApp')
     $scope.updateCartoList = function(lat, lng, borough) {
       CartoDB.queryByLatLng(lat, lng, borough)
         .done(function (data) {
-           $scope.resources = data.rows;
-           // need to use $apply() because the callback is from cartodb.SQL, not $http
-           $scope.$apply();
+
+          if(data.rows.length == 0) {
+            console.log('no local');
+            // $scope.hasLocal = false;
+            $scope.toggleBorough(true);
+          } else {
+
+            // if(!borough) $scope.hasLocal = true;
+            $scope.resources = data.rows;
+            // need to use $apply() because the callback is from cartodb.SQL, not $http
+            $scope.$apply();
+          }
+
         }).error(function(errors) {
             // errors contains a list of errors
             console.log("errors:" + errors);
