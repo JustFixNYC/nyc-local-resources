@@ -1,12 +1,13 @@
 <div ng-controller="MainCtrl">
 
+<h2>Housing Resources Directory</h2>
 <p class="lead">
   Find local community groups and legal services to help with your housing issues.
 </p>
 
 <div class="addr-search row">
     <form ng-submit="searchAddr()">
-      <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to find your location or enter your address:</label>
+      <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to find your current location or enter your address:</label>
       <div class="col-sm-12">
         <div class="input-group input-group-lg">
           <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
