@@ -119,6 +119,22 @@ body {
   padding-bottom: 10px;
 }
 
+.btn-primary {
+  @include button-variant($btn-primary-color, #4A89DC, #4A89DC);
+  &:hover, &:active, &:focus {
+    background-color: #5D9CEC;
+    border-color: #5D9CEC;
+  }  
+}
+
+.btn-success {
+  @include button-variant($btn-success-color, #8CC152, #8CC152);
+  &:hover, &:active, &:focus {
+    background-color: #A0D468;
+    border-color: #A0D468;
+  }
+}
+
 
 .addr-search {
 
