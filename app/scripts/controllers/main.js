@@ -88,17 +88,16 @@ angular.module('localResourcesApp')
 
           if(data.rows.length == 0) {
             $log.info('NO RESULTS=' + $scope.user.address);
-            console.log('no local');
-            $scope.error = true;
+            //console.log('no local');
+            //$scope.error = true;
             // $scope.hasLocal = false;
             //$scope.toggleBorough(true);
-          } else {
-
-            // if(!borough) $scope.hasLocal = true;
-            $scope.resources = data.rows;
-            // need to use $apply() because the callback is from cartodb.SQL, not $http
-            $scope.$apply();
           }
+
+          // if(!borough) $scope.hasLocal = true;
+          $scope.resources = data.rows;
+          // need to use $apply() because the callback is from cartodb.SQL, not $http
+          $scope.$apply();
 
         }).error(function(errors) {
             // errors contains a list of errors

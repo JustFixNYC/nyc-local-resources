@@ -42,12 +42,12 @@ angular.module('localResourcesApp')
         var credits = L.control.attribution().addTo(map);
         credits.addAttribution("© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>");
 
-        map.on('click', function(e) {
-            var tempLat = scope.user.lat = e.latlng.lat;
-            var tempLng = scope.user.lng = e.latlng.lng;
-            scope.updateCartoMap(tempLat, tempLng, scope.user.byBorough);
-            scope.updateCartoList(tempLat, tempLng, scope.user.byBorough);
-        });
+        // map.on('click', function(e) {
+        //     var tempLat = scope.user.lat = e.latlng.lat;
+        //     var tempLng = scope.user.lng = e.latlng.lng;
+        //     scope.updateCartoMap(tempLat, tempLng, scope.user.byBorough);
+        //     scope.updateCartoList(tempLat, tempLng, scope.user.byBorough);
+        // });
 
         var mainSublayer;
         var userMarker;
