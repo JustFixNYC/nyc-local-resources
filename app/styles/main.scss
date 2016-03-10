@@ -57,7 +57,7 @@ body {
     padding: 0;
     margin: 0;
     -webkit-margin-before:0em;
--webkit-margin-after:0em;
+    -webkit-margin-after:0em;
     height: 36px;
 
     @media (min-width: $screen-sm-min) {
@@ -67,6 +67,10 @@ body {
     li {
       vertical-align: top;
       height: 100%;
+
+      &:last-child {
+        padding-right: 0;
+      }
     }
   }
 
