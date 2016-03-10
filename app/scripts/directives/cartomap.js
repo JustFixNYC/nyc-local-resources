@@ -17,7 +17,8 @@ angular.module('localResourcesApp')
         /*** init map ***/
         var map = L.map('map', {
           scrollWheelZoom: false,
-          center: [40.6462615921222, -73.96270751953125],
+          // center: [40.6462615921222, -73.96270751953125],
+          center: [40.7127, -74.0059],
           zoom: 11
         });
 

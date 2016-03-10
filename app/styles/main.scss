@@ -100,12 +100,17 @@ body {
 #map {
   width: 100%;
   height: 35vh;
-  margin: 30px auto;
+  margin: 15px auto 30px auto;
 }
 
 .lead {
   margin-bottom: 10px;
+
+  &.main-subtext {
+    margin-bottom: 20px;
+  }
 }
+
 
 .bold {
   font-weight: bold;
@@ -124,7 +129,7 @@ body {
   &:hover, &:active, &:focus {
     background-color: #5D9CEC;
     border-color: #5D9CEC;
-  }  
+  }
 }
 
 .btn-success {
