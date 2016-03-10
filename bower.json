@@ -6,7 +6,9 @@
     "bootstrap-sass-official": "^3.2.0",
     "angular-animate": "^1.4.0",
     "angular-touch": "^1.4.0",
-    "cartodb.js": "~3.15.9"
+    "cartodb.js": "~3.15.9",
+    "angular-loggly-logger": "~0.2.0",
+    "angular-ui-router": "~0.2.18"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
@@ -20,6 +22,14 @@
         "dist/css/bootstrap.css",
         "dist/js/bootstrap.js"
       ]
+    },
+    "angular-loggly-logger": {
+      "main": [
+        "angular-loggly-logger.min.js"
+      ]
     }
+  },
+  "resolutions": {
+    "angular": "^1.4.0"
   }
 }

@@ -10,10 +10,10 @@
 
 
 angular.module('localResourcesApp')
-  .controller('MainCtrl', ['$scope', '$window', 'CartoDB', function ($scope, $window, CartoDB) {
+  .controller('MainCtrl', ['$scope', '$window', '$log', 'CartoDB', function ($scope, $window, $log, CartoDB) {
 
     $scope.user = {};
-    //$scope.user.address = '654 park place brooklyn';
+    // $scope.user.address = '654 park place brooklyn';
     $scope.user.loadingLoc = false;
     $scope.user.byLegal = false;
     // $scope.hasLocal = true;
@@ -23,6 +23,7 @@ angular.module('localResourcesApp')
     //var Geocoder = new google.maps.Geocoder();
 
     $scope.searchAddr = function() {
+      $log.info('SEARCHED=' + $scope.user.address);
       $window.Geocoder.geocode({ 'address': $scope.user.address }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
           $scope.user.lat = results[0].geometry.location.lat();
@@ -30,8 +31,9 @@ angular.module('localResourcesApp')
           $scope.error = false;
           $scope.user.address = results[0].formatted_address;
           $scope.user.borough = getUserBorough(results[0].formatted_address);
+          $log.info('FOUND=' + results[0].formatted_address);
+          ga('send', 'event', 'Map', 'search-found', 'Initial');
           $scope.update();
-
         } else {
           $scope.error = true;
           $scope.$apply();
@@ -55,6 +57,8 @@ angular.module('localResourcesApp')
             $scope.user.loadingLoc = false;
             $scope.user.address = results[0].formatted_address;
             $scope.user.borough = getUserBorough(results[0].formatted_address);
+            ga('send', 'event', 'Map', 'geolocation', 'Initial');
+            $log.info('GEOCODED=' + results[0].formatted_address);
             $scope.update();
           } else {
             $scope.error = true;
@@ -83,9 +87,11 @@ angular.module('localResourcesApp')
         .done(function (data) {
 
           if(data.rows.length == 0) {
+            $log.info('NO RESULTS=' + $scope.user.address);
             console.log('no local');
+            $scope.error = true;
             // $scope.hasLocal = false;
-            $scope.toggleBorough(true);
+            //$scope.toggleBorough(true);
           } else {
 
             // if(!borough) $scope.hasLocal = true;
@@ -112,10 +118,9 @@ angular.module('localResourcesApp')
     var getGeolocation = function(callback) {
       if (navigator.geolocation) {
         var timeoutVal = 10 * 1000 * 1000;
-        navigator.geolocation.watchPosition(
+        navigator.geolocation.getCurrentPosition(
           callback,
-          alertError,
-          { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+          alertError
         );
       }
       else {

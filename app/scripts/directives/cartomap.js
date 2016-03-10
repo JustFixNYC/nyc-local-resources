@@ -18,42 +18,36 @@ angular.module('localResourcesApp')
         var map = L.map('map', {
           scrollWheelZoom: false,
           center: [40.6462615921222, -73.96270751953125],
-          zoom: 11,
+          zoom: 11
         });
 
+        // L.control.attribution.addAttribution('© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>');
         L.Icon.Default.imagePath = "images/leaflet";
 
-        var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-        });
-        map.addLayer(layer);
+        // L.tileLayer('https://{s}.tiles.mapbox.com/v4/dan-kass.pcd8n3dl/{z}/{x}/{y}.png?access_token={token}', {
+        //     attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        //     subdomains: ['a','b','c','d'],
+        //     token: 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw'
+        // }).addTo(map);
 
-        var mapbox_token = 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw';
+        // https://github.com/mapbox/mapbox-gl-leaflet
+        var gl = L.mapboxGL({
+          accessToken: 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw',
+          style: 'mapbox://styles/dan-kass/cilljc5nu004d9vkngyozkhzb',
+          attributionControl: true
+        }).addTo(map);
 
-        // L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuLWthc3MiLCJhIjoiY2lsZTFxemtxMGVpdnVoa3BqcjI3d3Q1cCJ9.IESJdCy8fmykXbb626NVEw';
-        // // Replace 'mapbox.streets' with your map id.
-        // var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
-        //     attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        // });
-        // var map = L.map('map')
-        //     .addLayer(mapboxTiles);
+        map.attributionControl.removeFrom(map);
+        map.attributionControl.setPrefix('');
+        var credits = L.control.attribution().addTo(map);
+        credits.addAttribution("© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>");
 
         map.on('click', function(e) {
             var tempLat = scope.user.lat = e.latlng.lat;
             var tempLng = scope.user.lng = e.latlng.lng;
             scope.updateCartoMap(tempLat, tempLng, scope.user.byBorough);
             scope.updateCartoList(tempLat, tempLng, scope.user.byBorough);
-          //
-          //
-          // //  console.log(tempLng, tempLat);
-          //   scope.updateCartoMap(tempLat, tempLng);
-          //   CartoDB.queryByLatLng(tempLat, tempLng).done(function (data) {
-          //     // console.log(data);
-          //     scope.resources = data.rows;
-          //     scope.$apply();
-          //   });
         });
-
 
         var mainSublayer;
         var userMarker;
@@ -62,6 +56,7 @@ angular.module('localResourcesApp')
         var layerSource = {
           user_name: 'dan-kass',
           type: 'cartodb',
+
           sublayers: [{
             sql: "SELECT * FROM brooklyn_cbos_locations",
             // sql: "SELECT * FROM brooklyn_cbo_locations WHERE service_area_type IN ('neighborhood','zipcode','community_board')",
@@ -87,8 +82,6 @@ angular.module('localResourcesApp')
           var orgString = orgType ? 'legal' : 'community';
 
           var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations AS loc, nyc_cbos_service_areas AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND loc.organization = sa.organization AND loc.org_type IN ('" + orgString + "') ORDER BY dist ASC ) T LIMIT 10";
-
-
 
           if(userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng]);

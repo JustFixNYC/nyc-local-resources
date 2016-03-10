@@ -2,10 +2,13 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>JustFix.nyc - Housing Resources Directory</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- Fav Icon -->
+    <link href="/images/brand/favicon.ico" rel="shortcut icon" type="image/x-icon">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 
@@ -13,6 +16,9 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/cartodb.js/themes/css/cartodb.css" />
     <!-- endbower -->
+
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.14.3/mapbox-gl.css" rel='stylesheet' />
+
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
@@ -20,6 +26,9 @@
 
 
     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU7vbWOHS6wd2eJxgY3WBQw-GwHaAWqng&signed_in=true"></script> -->
+
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 
     <script>
       function initGoogle() { console.log('geocoder init'); window.Geocoder = new google.maps.Geocoder(); };
@@ -37,20 +46,30 @@
     <div class="header">
       <div class="container">
           <!-- <a href="#/"><h3>JustFix.nyc - Find Help</h3></a> -->
-          <a href="" class="navbar-brand">
+          <a href="http://justfix.nyc" class="navbar-brand">
             <div data-ng-include="'/images/brand/logo.svg'" aria-label="justfix.nyc"/ class="logo"></div>
           </a>
+          <ul class="list-inline pull-right">
+            <li><a ui-sref="about" class="navbar-link">About</a></li>
+            <li class="twitter-follow"><a href="https://twitter.com/JustFixNYC" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false">Follow @JustFixNYC</a>
+            </li>
+          </ul>
+
       </div>
     </div>
 
     <section class="container">
       <!-- <div ng-include="'views/main.html'" ng-controller="MainCtrl"></div> -->
-      <div ng-include="'views/main.html'" ></div>
+      <!-- <div ng-include="'views/main.html'" ></div> -->
+      <div ui-view></div>
     </section>
 
     <div class="footer">
       <div class="container">
-        <p>Made by the team at JustFix.nyc</p>
+        <ul class="list-inline">
+          <li>Made by the team at <a href="http://justfix.nyc">JustFix.nyc</a></li>
+          <li><a href="mailto:hello@justfix.nyc">Contact Us</a></li>
+        </ul>
       </div>
     </div>
 
@@ -62,7 +81,7 @@
        r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
        }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
+       ga('create', 'UA-67069242-2');
        ga('send', 'pageview');
     </script>
 
@@ -74,7 +93,14 @@
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/cartodb.js/cartodb.js"></script>
+    <script src="bower_components/angular-loggly-logger/angular-loggly-logger.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/mapbox-gl.js -->
+    <script src="external/mapbox-gl.js"></script>
+    <script src="external/leaflet-mapbox-gl.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->

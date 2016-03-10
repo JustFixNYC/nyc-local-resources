@@ -7,7 +7,7 @@
 
 <div class="addr-search row">
     <form ng-submit="searchAddr()">
-      <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to find your current location or enter your address:</label>
+      <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to get your current location or enter your address:</label>
       <div class="col-sm-12">
         <div class="input-group input-group-lg">
           <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
@@ -44,6 +44,9 @@
 
 <div ng-if="resources && resources.length > 0">
 
+  <a href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform" class="not-seeing-link" target="_blank">Are we missing someone? Let us know!</a>
+  <br />
+
   <!-- <div ng-if="hasLocal"> -->
     <!-- <label class="control-label">Show groups in:</label> -->
     <div class="btn-group btn-group-justified org-type-toggle">
@@ -59,7 +62,8 @@
       <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
     </div>
     <div class="panel-body">
-      <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
+      <!-- <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a> -->
+      <a ng-href="http://maps.google.com/?saddr={{ user.address }}&daddr={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
       <p class="services">{{ r.services }}</p>
       <a  class="btn btn-success btn-block"
           ng-href="tel:{{ r.contact_information }}">
@@ -68,6 +72,21 @@
       </a>
     </div>
   </div>
+
+  <div class="panel resources-panel missing-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">Are we missing someone? Let us know!</h3>
+    </div>
+    <div class="panel-body">
+      <a  class="btn btn-primary btn-block"
+          target="_blank"
+          href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform">
+          <span class="glyphicon glyphicon-plus pull-left"></span>
+          Add new resource
+      </a>
+    </div>
+  </div>
+
 
 </div>
 
