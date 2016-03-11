@@ -1,10 +1,15 @@
 <!doctype html>
 <html>
   <head>
+    <base href="/">
     <meta charset="utf-8">
     <title>JustFix.nyc - Housing Resources Directory</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="The Housing Resources Directory is a website for New Yorkers seeking assistance with their housing issues to find the right groups to contact. We aim to provide the most local and relevant results based on your location with easy access to contact information, map directions, and services offered.">
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"> -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <!-- <meta name="viewport" content="width=device-width"> -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black"> -->
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <!-- Fav Icon -->
@@ -35,6 +40,18 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU7vbWOHS6wd2eJxgY3WBQw-GwHaAWqng&signed_in=true&callback=initGoogle"></script>
 
+
+    <script>
+          // When ready...
+      window.addEventListener("load",function() {
+          // Set a timeout...
+          setTimeout(function(){
+              // Hide the address bar!
+              window.scrollTo(0, 1);
+          }, 0);
+      });
+
+    </script>
 
   </head>
   <body ng-app="localResourcesApp">

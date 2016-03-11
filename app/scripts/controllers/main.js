@@ -82,16 +82,14 @@ angular.module('localResourcesApp')
       $scope.updateCartoList(lat, lng, $scope.user.byLegal);
     };
 
-    $scope.updateCartoList = function(lat, lng, borough) {
-      CartoDB.queryByLatLng(lat, lng, borough)
+    $scope.updateCartoList = function(lat, lng, orgType) {
+      CartoDB.queryByLatLng(lat, lng, orgType)
         .done(function (data) {
 
           if(data.rows.length == 0) {
             $log.info('NO RESULTS=' + $scope.user.address);
-            //console.log('no local');
-            //$scope.error = true;
-            // $scope.hasLocal = false;
-            //$scope.toggleBorough(true);
+            // orgType = false means trying for community groups
+            // if(!orgType) $scope.toggleOrgType(true);
           }
 
           // if(!borough) $scope.hasLocal = true;
