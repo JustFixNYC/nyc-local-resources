@@ -248,6 +248,20 @@ body {
   padding-top: 19px;
   color: #777;
   border-top: 1px solid #e5e5e5;
+
+  li {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: -4px;
+  }
+
+  li:first-of-type {
+    padding-left: 0;
+  }
+
+  li:not(:last-of-type) {
+    border-right: 1px solid darken(#f1f2f6, 10%);
+  }
 }
 
 .container-narrow > hr {

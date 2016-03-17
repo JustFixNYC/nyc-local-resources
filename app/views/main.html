@@ -63,7 +63,7 @@
     </div>
     <div class="panel-body">
       <!-- <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a> -->
-      <a ng-href="http://maps.google.com/?saddr={{ user.address }}&daddr={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
+      <a ng-href="http://maps.google.com/?saddr={{ user.address }}&daddr={{ r.address }}" target="_blank"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
       <p class="services">{{ r.services }}</p>
       <a  class="btn btn-success btn-block"
           ng-href="tel:{{ r.contact_information }}">

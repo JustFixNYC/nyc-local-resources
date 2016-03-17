@@ -18,8 +18,8 @@ angular.module('localResourcesApp')
         var map = L.map('map', {
           scrollWheelZoom: false,
           // center: [40.6462615921222, -73.96270751953125],
-          center: [40.7127, -74.0059],
-          zoom: 11
+          center: [40.7127, -73.96270751953125],
+          zoom: 10
         });
 
         // L.control.attribution.addAttribution('© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>');
@@ -59,9 +59,8 @@ angular.module('localResourcesApp')
           type: 'cartodb',
 
           sublayers: [{
-            sql: "SELECT * FROM brooklyn_cbos_locations",
-            // sql: "SELECT * FROM brooklyn_cbo_locations WHERE service_area_type IN ('neighborhood','zipcode','community_board')",
-            cartocss: "#brooklyn_cbos_locations{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#F60;marker-allow-overlap:true}#brooklyn_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"
+            sql: "SELECT * FROM nyc_cbos_locations",
+            cartocss: "#nyc_cbos_locations{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#F60;marker-allow-overlap:true}"
           }]
         };
 
@@ -87,7 +86,11 @@ angular.module('localResourcesApp')
           if(userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng]);
           userMarker.addTo(map);
-          mainSublayer.setSQL(query);
+
+          mainSublayer.set({
+            sql: query,
+            cartocss: "#nyc_cbos_locations{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#F60;marker-allow-overlap:true}#nyc_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"
+          });
 
           CartoDB.getSQL().getBounds(query).done(function(bounds) {
             //console.log(lat,lng);
