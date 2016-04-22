@@ -19,12 +19,26 @@ angular.module('localResourcesApp')
     // $scope.hasLocal = true;
 
 
-    if(!$window.Geocoder) alert('warning: no geocoder set');
+    if(!$window.Geocoder) {
+      $log.info('ERROR: no geocoder set.');
+      console.error('warning: no geocoder set');
+    } else {
+      var boundsNYC = new google.maps.LatLngBounds(
+          new google.maps.LatLng('40.496044', '-74.255735'),
+          new google.maps.LatLng('40.915256', '-73.700272')
+      );
+    }
+
+
     //var Geocoder = new google.maps.Geocoder();
 
     $scope.searchAddr = function() {
       $log.info('SEARCHED=' + $scope.user.address);
-      $window.Geocoder.geocode({ 'address': $scope.user.address }, function(results, status) {
+      // $window.Geocoder.geocode({ 'address': $scope.user.address }, function(results, status) {
+      $window.Geocoder.geocode({
+        address: $scope.user.address,
+        bounds: boundsNYC
+      }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
           $scope.user.lat = results[0].geometry.location.lat();
           $scope.user.lng = results[0].geometry.location.lng();
