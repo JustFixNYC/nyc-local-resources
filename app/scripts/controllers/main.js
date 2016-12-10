@@ -10,17 +10,16 @@
 
 
 angular.module('localResourcesApp')
-  .controller('MainCtrl', ['$scope', '$window', '$log', 'CartoDB', function ($scope, $window, $log, CartoDB) {
+  .controller('MainCtrl', ['$scope', '$window', '$location', 'CartoDB', function ($scope, $window, $location, CartoDB) {
 
     $scope.user = {};
-    // $scope.user.address = '654 park place brooklyn';
     $scope.user.loadingLoc = false;
     $scope.user.byLegal = false;
-    // $scope.hasLocal = true;
-
+    if(!$location.search().type) $location.search('type', 'community');
 
     if(!$window.Geocoder) {
-      $log.info('ERROR: no geocoder set.');
+      // $log.info('ERROR: no geocoder set.');
+      Rollbar.error("No geocoder set.");
       console.error('warning: no geocoder set');
     } else {
       var boundsNYC = new google.maps.LatLngBounds(
@@ -28,12 +27,10 @@ angular.module('localResourcesApp')
           new google.maps.LatLng('40.915256', '-73.700272')
       );
     }
-
-
     //var Geocoder = new google.maps.Geocoder();
 
     $scope.searchAddr = function() {
-      $log.info('SEARCHED=' + $scope.user.address);
+      // $log.info('SEARCHED=' + $scope.user.address);
       // $window.Geocoder.geocode({ 'address': $scope.user.address }, function(results, status) {
       $window.Geocoder.geocode({
         address: $scope.user.address,
@@ -45,12 +42,18 @@ angular.module('localResourcesApp')
           $scope.error = false;
           $scope.user.address = results[0].formatted_address;
           $scope.user.borough = getUserBorough(results[0].formatted_address);
-          $log.info('FOUND=' + results[0].formatted_address);
+          // $log.info('FOUND=' + results[0].formatted_address);
+          $location.search('search', results[0].formatted_address);
+          Rollbar.info("Search", {
+            searched: $scope.user.address,
+            found: results[0].formatted_address
+          });
           ga('send', 'event', 'Map', 'search-found', 'Initial');
           $scope.update();
         } else {
           $scope.error = true;
           $scope.$apply();
+          Rollbar.error("Geocode was not successful for the following reason: " + status);
           console.error('Geocode was not successful for the following reason: ' + status);
         }
       });
@@ -72,7 +75,10 @@ angular.module('localResourcesApp')
             $scope.user.address = results[0].formatted_address;
             $scope.user.borough = getUserBorough(results[0].formatted_address);
             ga('send', 'event', 'Map', 'geolocation', 'Initial');
-            $log.info('GEOCODED=' + results[0].formatted_address);
+            // $log.info('GEOCODED=' + results[0].formatted_address);
+            Rollbar.info("Geocoded", {
+              found: results[0].formatted_address
+            });
             $scope.update();
           } else {
             $scope.error = true;
@@ -85,9 +91,16 @@ angular.module('localResourcesApp')
     }
 
     $scope.toggleOrgType = function(byLegal) {
+      if(byLegal) {
+        $location.search('type', 'legal');
+      } else {
+        $location.search('type', 'community');
+      }
       $scope.user.byLegal = byLegal;
       $scope.update();
     };
+
+
 
     $scope.update = function() {
       var lat = $scope.user.lat;
@@ -101,7 +114,10 @@ angular.module('localResourcesApp')
         .done(function (data) {
 
           if(data.rows.length == 0) {
-            $log.info('NO RESULTS=' + $scope.user.address);
+            // $log.info('NO RESULTS=' + $scope.user.address);
+            Rollbar.info("No results", {
+              address: $scope.user.address
+            });
             // orgType = false means trying for community groups
             // if(!orgType) $scope.toggleOrgType(true);
           }
@@ -148,5 +164,23 @@ angular.module('localResourcesApp')
       }
     };
 
+    if($location.search().search) {
+      console.log('search', $location.search().search);
+      $scope.user.address = $location.search().search;
+      $scope.searchAddr();
+    }
+    if($location.search().type) {
+      switch($location.search().type) {
+        case 'legal':
+          $scope.user.byLegal = true;
+          break;
+        case 'community':
+          $scope.user.byLegal = false;
+          break;
+       default:
+         $scope.user.byLegal = false;
+         break;
+      }
+    }
 
 }]);

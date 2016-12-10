@@ -12,11 +12,16 @@ angular
   .module('localResourcesApp', [
     'ngAnimate',
     'ngTouch',
-    'logglyLogger',
     'ui.router'
-  ]).config( function( LogglyLoggerProvider ) {
-	   LogglyLoggerProvider.inputToken( '664962ee-b2be-41fa-bda6-86ea45769419	' ).sendConsoleErrors(true).logToConsole(false);
-  })
+  ])
+  // .config( function( LogglyLoggerProvider ) {
+	//    LogglyLoggerProvider.inputToken( '664962ee-b2be-41fa-bda6-86ea45769419	' ).sendConsoleErrors(true).logToConsole(false);
+  // })
+  // Setting HTML5 Location Mode
+  .config(['$locationProvider', function($locationProvider) {
+    $locationProvider.hashPrefix('!');
+    $locationProvider.html5Mode(true);
+  }])
   .config(function($stateProvider, $urlRouterProvider) {
     //
     // For any unmatched url, redirect to /state1
@@ -33,7 +38,7 @@ angular
         templateUrl: "views/about.html"
       });
   })
-  .run(['$rootScope', '$window', 'LogglyLogger', '$log', function($rootScope, $window, LogglyLogger, $log) {
+  .run(['$rootScope', '$window', function($rootScope, $window) {
 
     // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
     //   if(Authentication.user && toState.name === 'home') {
