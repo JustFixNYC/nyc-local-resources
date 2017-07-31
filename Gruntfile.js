@@ -16,7 +16,8 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
-    cdnify: 'grunt-google-cdn'
+    cdnify: 'grunt-google-cdn',
+    dev_prod_switch: 'grunt-dev-prod-switch'
   });
 
   // Configurable paths for the application
@@ -117,6 +118,18 @@ module.exports = function (grunt) {
         }
       }
     },
+
+    dev_prod_switch: {
+      options: {
+        environment: 'dev'
+      },
+      all: {
+        files: {
+          '<%= yeoman.app %>/index.html': '<%= yeoman.app %>/index.html'
+        }
+      }
+    },
+
 
     // Make sure there are no obvious mistakes
     jshint: {
@@ -410,28 +423,28 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
-            '*.html',
-            'images/{,*/}*.{webp}',
-            'styles/fonts/{,*/}*.*'
-          ]
-        }, {
-          expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= yeoman.dist %>/images',
-          src: ['generated/*']
-        }, {
-          expand: true,
-          cwd: '.',
-          src: 'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
-          dest: '<%= yeoman.dist %>'
-        }, {
-          expand: true,
-          flatten: true,
-          cwd: '.',
-          src: 'server/*',
-          dest: '<%= yeoman.dist %>'
-        }]
+              '*.{ico,png,txt}',
+              '*.html',
+              'images/{,*/}*.{webp}',
+              'styles/fonts/{,*/}*.*'
+            ]
+          }, {
+            expand: true,
+            cwd: '.tmp/images',
+            dest: '<%= yeoman.dist %>/images',
+            src: ['generated/*']
+          }, {
+            expand: true,
+            cwd: '.',
+            src: 'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
+            dest: '<%= yeoman.dist %>'
+          }, {
+            expand: true,
+            flatten: true,
+            cwd: '.',
+            src: 'server/*',
+            dest: '<%= yeoman.dist %>'
+          }]
       },
       styles: {
         expand: true,
@@ -465,7 +478,6 @@ module.exports = function (grunt) {
     }
   });
 
-
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -474,6 +486,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'dev_prod_switch',
       'concurrent:server',
       'postcss:server',
       'connect:livereload',

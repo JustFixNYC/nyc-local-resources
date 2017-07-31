@@ -77,12 +77,13 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAU7vbWOHS6wd2eJxgY3WBQw-GwHaAWqng&signed_in=true&callback=initGoogle"></script>
 
     <script>
+
     var _rollbarConfig = {
         accessToken: "e7c58007b85743eca198c53550506dc4",
         captureUncaught: true,
         captureUnhandledRejections: true,
         payload: {
-            environment: "production"
+          environment: "{{ env }}"
         }
     };
     // Rollbar Snippet
