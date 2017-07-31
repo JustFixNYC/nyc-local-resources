@@ -29,6 +29,7 @@ angular.module('localResourcesApp')
     }
     //var Geocoder = new google.maps.Geocoder();
 
+//main function:
     $scope.searchAddr = function() {
       // $log.info('SEARCHED=' + $scope.user.address);
       // $window.Geocoder.geocode({ 'address': $scope.user.address }, function(results, status) {
@@ -88,7 +89,7 @@ angular.module('localResourcesApp')
           }
         });
       });
-    }
+    };
 
     $scope.toggleOrgType = function(byLegal) {
       if(byLegal) {

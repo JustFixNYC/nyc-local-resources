@@ -26,9 +26,13 @@ html, body {
   // overflow-x: hidden;
 }
 
+h2 {
+  font-size: 150%;
+}
 
 body {
     background-color: #f1f2f6;
+    //background-color: #ffffff;
     // position: relative;
     // top:0;
 }
@@ -124,6 +128,7 @@ body {
 
   &.main-subtext {
     margin-bottom: 20px;
+    font-size: 100%;
   }
 }
 
