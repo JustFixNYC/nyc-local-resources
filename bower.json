@@ -7,7 +7,8 @@
     "angular-animate": "~1.4",
     "angular-touch": "~1.4",
     "cartodb.js": "~3.15.9",
-    "angular-ui-router": "~0.2.18"
+    "angular-ui-router": "~0.2.18",
+    "angular-bootstrap": "^2.5.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4"
