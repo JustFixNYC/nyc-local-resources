@@ -12,7 +12,8 @@ angular
   .module('localResourcesApp', [
     'ngAnimate',
     'ngTouch',
-    'ui.router'
+    'ui.router',
+    'ui.bootstrap'
   ])
   // .config( function( LogglyLoggerProvider ) {
 	//    LogglyLoggerProvider.inputToken( '664962ee-b2be-41fa-bda6-86ea45769419	' ).sendConsoleErrors(true).logToConsole(false);
