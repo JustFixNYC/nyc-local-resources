@@ -7,3 +7,4 @@ dist/node_modules
 /bower_components
 /build.sh
 /index.php
+.DS_Store
