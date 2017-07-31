@@ -19,7 +19,7 @@ angular.module('localResourcesApp')
 
     if(!$window.Geocoder) {
       // $log.info('ERROR: no geocoder set.');
-      Rollbar.error("No geocoder set.");
+      if(typeof Rollbar !== "undefined") { Rollbar.error("No geocoder set."); }
       console.error('warning: no geocoder set');
     } else {
       var boundsNYC = new google.maps.LatLngBounds(
@@ -44,16 +44,18 @@ angular.module('localResourcesApp')
           $scope.user.borough = getUserBorough(results[0].formatted_address);
           // $log.info('FOUND=' + results[0].formatted_address);
           $location.search('search', results[0].formatted_address);
-          Rollbar.info("Search", {
-            searched: $scope.user.address,
-            found: results[0].formatted_address
-          });
+          if(typeof Rollbar !== "undefined") {
+            Rollbar.info("Search", {
+              searched: $scope.user.address,
+              found: results[0].formatted_address
+            });
+          }
           ga('send', 'event', 'Map', 'search-found', 'Initial');
           $scope.update();
         } else {
           $scope.error = true;
           $scope.$apply();
-          Rollbar.error("Geocode was not successful for the following reason: " + status);
+          if(typeof Rollbar !== "undefined") { Rollbar.error("Geocode was not successful for the following reason: " + status); }
           console.error('Geocode was not successful for the following reason: ' + status);
         }
       });
@@ -76,9 +78,11 @@ angular.module('localResourcesApp')
             $scope.user.borough = getUserBorough(results[0].formatted_address);
             ga('send', 'event', 'Map', 'geolocation', 'Initial');
             // $log.info('GEOCODED=' + results[0].formatted_address);
-            Rollbar.info("Geocoded", {
-              found: results[0].formatted_address
-            });
+            if(typeof Rollbar !== "undefined") {
+              Rollbar.info("Geocoded", {
+                found: results[0].formatted_address
+              });
+            }
             $scope.update();
           } else {
             $scope.error = true;
@@ -115,9 +119,11 @@ angular.module('localResourcesApp')
 
           if(data.rows.length == 0) {
             // $log.info('NO RESULTS=' + $scope.user.address);
-            Rollbar.info("No results", {
-              address: $scope.user.address
-            });
+            if(typeof Rollbar !== "undefined") {
+              Rollbar.info("No results", {
+                address: $scope.user.address
+              });
+            }
             // orgType = false means trying for community groups
             // if(!orgType) $scope.toggleOrgType(true);
           }
