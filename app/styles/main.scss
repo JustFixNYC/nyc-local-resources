@@ -153,6 +153,15 @@ body {
   }
 }
 
+/*.btn-default {
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 4px 0 #999999;
+  border-radius: 3px;
+  &:active, &:hover, &:focus {
+    background-color: #0096D7;
+  }
+}*/
+
 .btn-success {
   @include button-variant($btn-success-color, #8CC152, #8CC152);
   &:hover, &:active, &:focus {
