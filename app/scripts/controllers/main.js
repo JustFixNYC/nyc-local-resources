@@ -24,6 +24,8 @@ angular.module('localResourcesApp')
     $scope.user.finishedIntake = false;
     $scope.user.editSearchOpen = false; //change
     $scope.user.currentIntake = 1;
+    $scope.user.intakeNavOpen = [false,true,false,false,false];
+    $scope.user.intakeNavDisabled = [false, false, true, true, true];
     //if(!$location.search().showResults) $location.search('showResults', false);
 
     if(!$window.Geocoder) {
@@ -107,6 +109,21 @@ angular.module('localResourcesApp')
       });
     };
 
+    $scope.openPanel = function(panel){
+      $scope.user.intakeNavOpen = [false,false,false,false,false];
+      $scope.user.intakeNavOpen[panel] = true;
+      $scope.user.intakeNavDisabled[panel] = false;
+      console.log ('panels: ', panel);
+    }
+
+    $scope.isPanelOpen = function(panel){
+      return ($scope.user.intakeNavOpen[panel]);
+    }
+
+    $scope.isPanelDisabled = function(panel){
+      return ($scope.user.intakeNavDisabled[panel]);
+    }
+
     $scope.toggleOrgType = function(type) {
       /*if(byLegal) {
         $location.search('type', 'legal');
@@ -165,7 +182,7 @@ angular.module('localResourcesApp')
       console.log('USER TAGS ARRAY: ', $scope.user.userTags);
       $scope.updateCartoMap(lat, lng, $scope.user.org_type, $scope.user.housingCourtStatus, $scope.user.userTags);
       $scope.updateCartoList(lat, lng, $scope.user.org_type, $scope.user.housingCourtStatus, $scope.user.userTags);
-      console.log('will query for housing type ', $scope.user.housingType, ' and status in housing court ', $scope.user.housingCourtStatus, ' specializing in ', $scope.user.eligibilityTags);
+      console.log('will query for ', $scope.user.org_type, ' org type for housing type ', $scope.user.housingType, ' and status in housing court ', $scope.user.housingCourtStatus, ' specializing in ', $scope.user.eligibilityTags);
     };
 
     $scope.updateCartoList = function(lat, lng, orgType, housingCourtStatus, userTags) {
