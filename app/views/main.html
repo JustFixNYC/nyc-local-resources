@@ -1,161 +1,187 @@
 <div ng-controller="MainCtrl">
 
-<h2>Tenant Assistance Directory HACKED</h2>
-<p class="lead main-subtext" ng-hide="user.finishedIntake || user.editSearchOpen">
-  This referral directory can help you find local community groups, legal services, and elected officials who may be able to help with your housing issues. Help us help you by telling us a little more about your situation.
-</p>
-<div class="addr-search row" ng-hide="user.finishedIntake || user.editSearchOpen">
-    <form ng-submit="searchAddr()"> <!-- changed fr user.editSearchOpen = true;-->
+  <h2>Tenant Assistance Directory</h2>
+  <p class="lead main-subtext" ng-hide="user.finishedIntake || user.editSearchOpen">
+    This referral directory can help you find local community groups, legal services, and elected officials who may be able to help with your housing issues. Help us help you by telling us a little more about your situation.
+  </p>
+  <div class="addr-search row" ng-hide="user.finishedIntake || user.editSearchOpen">
+    <form ng-submit="searchAddr(toggleSearch()); user.intakeNavDisabled = [false, false, true, true, true]; openPanel(1);"> <!-- changed fr user.editSearchOpen = true;-->
       <label class="col-sm-12 control-label" for="addrSearch">Tap <span class="glyphicon glyphicon-map-marker"></span> to get your current location or search by address, neighborhood, or zipcode:</label>
       <div class="col-sm-12">
         <div class="input-group input-group-lg">
           <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
           <span class="input-group-btn">
-            <button class="btn btn-success" type="button" ng-click="searchGeolocation()">
+            <button class="btn btn-success" type="button" ng-click="searchGeolocation(); openPanel(1); user.intakeNavDisabled = [false, false, true, true, true];">
               <span ng-class="user.loadingLoc ? 'glyphicon-refresh spinning' : 'glyphicon-map-marker'" class="glyphicon"></span>
             </button>
-            <button class="btn btn-primary" type="button" ng-click="searchAddr()" >next</button>
-          </span> <!-- originally button above called searchAddr()-->
+            <button class="btn btn-primary" type="button" ng-click="searchAddr(toggleSearch()); openPanel(1); user.intakeNavDisabled = [false, false, true, true, true];" >next</button>
+          </span>
         </div><!-- /input-group -->
       </div>
     </form>
-</div>
+  </div>
 
-<div class="search output" ng-show="user.finishedIntake">
-  <p class="lead main-subtext">
-    Showing organizations near {{user.address}} <br>
-    working with {{user.housingType}} housing <br>
-    serving {{user.eligibilityTags.toString().replace(',', ', ')}} <br>
-    specializing in {{user.issueTags.toString().replace(',', ', ')}} <br>
-  </p>
-  <label class="btn btn-default edit-search" ng-click="user.editSearchOpen = true" ng-show="!user.editSearchOpen">EDIT SEARCH</label>
-  <label class="btn btn-default done-search" ng-click="update();" ng-show="user.editSearchOpen">DONE</label>
+  <div class="search output" ng-show="user.finishedIntake">
+    <p class="lead output-subtext madlibs">
+      Showing organizations near<span class="label label-default">{{user.address.substring(0,user.address.indexOf(','))}}</span> working with tenants with housing court status<span class="label label-default">{{user.housingCourtStatus}}</span>who live in<span class="label label-default" class="search-tag"style="font-weight=bold">{{user.housingType}}</span>housing and serving tenants who<span class="label label-default" class="search-tag"style="font-weight=bold">{{user.eligibilityTags.toString().replace(',', ', ')}}</span>facing <span class="label label-default search-tag" style="font-weight=bold"> {{user.issueTags.toString().replace(',', ', ')}}</span>issues.<br>
+    </p>
+    <button class="btn btn-basic edit-search" ng-click="toggleSearch(); user.intakeNavDisabled = [false, false, false, false, false]; openPanel(4)" ng-show="!user.editSearchOpen">EDIT SEARCH</button>
+    <button class="btn btn-basic done-search" ng-click="toggleSearch(); update();" ng-show="user.editSearchOpen">SEE RESULTS</button>
+  </div>
 
-</div>
-
-<div ng-if="error">
-  <p class="error-text">
-    Error! Please make sure you've entered a specific address.
-  </p>
-</div>
-<!--
-<div ng-show="resources && resources.length > 0">
+  <div ng-if="error">
+    <p class="error-text">
+      Error! Please make sure you've entered a specific address.
+    </p>
+  </div>
+  <!--
+  <div ng-show="resources && resources.length > 0">
 
   <label class="control-label">Show groups in:</label>
   <div class="btn-group btn-group-justified borough-toggle">
-      <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My area</label>
-      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
-      <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">Hotlines</label>
-  </div>
+  <label class="btn btn-primary" ng-class="{ active: !user.byBorough }" ng-click="toggleBorough(false)">My area</label>
+  <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">My borough</label>
+  <label class="btn btn-primary" ng-class="{ active: user.byBorough }" ng-click="toggleBorough(true)">Hotlines</label>
+</div>
 </div> -->
 <div class="intake" ng-show="user.editSearchOpen">
   <uib-accordion close-others="true">
-    <div uib-accordion-group class="panel-default intake1" heading="TYPE OF HOUSING" is-open="isPanelOpen(1)" is-disabled="isPanelDisabled(1)">
-      <p>WHAT TYPE OF HOUSING DO YOU LIVE IN?</p>
-        <div class="controls">
-          <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'RS'" name="housing" ng-click="updateHousingType('RS')" ng-class="{ active: user.housingType == 'RS' }" required="">Rent-Stabilized</label>
-
-          <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'MR'" name="housing" ng-click="updateHousingType('MR')" ng-class="{ active: user.housingType == 'MR' }" required="">Market-Rate</label>
-
-          <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'ML'" name="housing" ng-click="updateHousingType('ML')" ng-class="{ active: user.housingType == 'ML' }" required="">Mitchell-lama</label>
-
-          <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'NYCHA'" name="housing" ng-class="{ active: user.housingType == 'NYCHA' }" ng-click="updateHousingType('NYCHA')" required="">NYCHA/Section 8</label>
-        </div>
-        <label class="btn btn-primary" ng-click="openPanel(2)">NEXT</label>
-
-    </div>
-    <div uib-accordion-group class="panel-default" heading="HOUSING COURT STATUS" is-open="isPanelOpen(2)" is-disabled="isPanelDisabled(2)">
-      <p>What is your current status?</p>
+    <div uib-accordion-group class="panel-default intake" heading="ADDRESS: {{user.address}}" is-open="user.intakeNavOpen[0]" is-disabled="user.intakeNavDisabled[0]">
+      <p>What is your address?</p>
       <div class="controls">
-        <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'RS'" name="housing" ng-click="updateHousingCourt(true)" ng-class="{active: user.housingCourtStatus}" required="">I am currently involved in an active housing court case.</label>
-
-        <label class="btn btn-default ng-pristine ng-untouched ng-binding ng-invalid ng-invalid-required" ng-model="user.housingType" btn-radio="'MR'" name="housing" ng-click="updateHousingCourt(false)" ng-class="{active: !user.housingCourtStatus}" required="">I need repairs or other housing support, but am not in an active court case.</label>
+        <form ng-submit="searchAddr()">
+          <input type="text" class="form-control" ng-model="user.address" placeholder="Ex: 1542 Atlantic Ave, Brooklyn NY">
+        </form>
       </div>
-      <label class="btn btn-primary" ng-click="openPanel(3)">NEXT</label>
-    </div>
-    <div uib-accordion-group class="panel-default" heading="ABOUT YOU" is-open="isPanelOpen(3)" is-disabled="isPanelDisabled(3)">
-      <p>Which of these applies to you?</p>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'income') }" ng-click="updateEligibilityTags('income')">I receive public assistance</label>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'seniors') }" ng-click="updateEligibilityTags('seniors')">I am 62 years of age or older</label>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'disability') }" ng-click="updateEligibilityTags('disability')">I have a disability</label>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'lgbtq') }" ng-click="updateEligibilityTags('lgbtq')">I identify as LGBTQ+</label>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'children') }" ng-click="updateEligibilityTags('children')">I have dependent children</label>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'health') }" ng-click="updateEligibilityTags('health')">I face serious/chronic health issues</label>
-      <label class="btn btn-primary" ng-click="openPanel(4)">NEXT</label>
-    </div>
-    <div uib-accordion-group class="panel-default" heading="ISSUES" is-open="isPanelOpen(4)" is-disabled="isPanelDisabled(4)">
-      <p>Which issue(s) do you need help with?</p>
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'eviction') }" ng-click="updateIssueTags('eviction')">Eviction</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'repairs') }" ng-click="updateIssueTags('repairs')">Getting repairs</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'overcharge') }" ng-click="updateIssueTags('overcharge')">Rent Overcharge</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'lease') }" ng-click="updateIssueTags('lease')">Lease Renewal</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'succession') }" ng-click="updateIssueTags('succession')">Succession Rights</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'benefits') }" ng-click="updateIssueTags('benefits')">Subsidies/benefits</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'harassment') }" ng-click="updateIssueTags('harassment')">Landlord harassment</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'rights') }" ng-click="updateIssueTags('rights')">Learning about my tenant rights</label>
-
-      <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'organizing') }" ng-click="updateIssueTags('organizing')">Organizing my building</label>
-
-      <div class="nav">
-        <label class="btn btn-primary" ng-click="update()">FIND HELP</label>
-      </div>
-
-    </div>
-  </uib-accordion>
-</div>
-
-
-<div class="output referrals" ng-show="user.finishedIntake"><!-- && !user.editSearchOpen" change-->
-  <carto-map></carto-map>
-  <div class="org type toggle">
-      <label class="btn btn-primary" ng-class="{ active: containsTag(user.org_type,'community') }" ng-click="toggleOrgType('community')">Community groups</label>
-      <label class="btn btn-primary" ng-class="{ active: containsTag(user.org_type,'legal') }" ng-click="toggleOrgType('legal')">Legal services</label>
-      <label class="btn btn-primary" ng-class="{ active: containsTag(user.org_type,'govt') }" ng-click="toggleOrgType('govt')">Elected officials</label>
-  </div>
-  <div ng-if="resources && resources.length > 0">
-    <a href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform" class="not-seeing-link" target="_blank">Are we missing someone? Let us know!</a>
-    <br />
-
-    <!-- <div ng-if="hasLocal"> -->
-      <!-- <label class="control-label">Show groups in:</label> -->
-      <!--<div class="btn-group btn-group-justified org-type-toggle">-->
-
-    <!-- </div> -->
-
-    <!-- <p class="lead">Results:</p> -->
-    <div ng-repeat="r in resources" class="panel resources-panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{ r.rownum }}. {{ r.organization }}</h3>
-      </div>
-      <div class="panel-body">
-        <!-- <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a> -->
-        <a ng-href="http://maps.google.com/?saddr={{ user.address }}&daddr={{ r.address }}" target="_blank"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
-        <p class="services">{{ r.services }}</p>
-        <a  class="btn btn-success btn-block"
-            ng-href="tel:{{ r.contact_information }}">
-            <span class="glyphicon glyphicon-earphone pull-left"></span>
-            {{ r.contact_information | tel }}
-        </a>
-      </div>
+      <button class="btn btn-primary next-button" ng-click="searchAddr(openPanel(1))">NEXT</button>
     </div>
 
-    <div class="panel resources-panel missing-panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">Are we missing someone? Let us know!</h3>
+    <div uib-accordion-group class="panel-default intake" heading="TYPE OF HOUSING" is-open="user.intakeNavOpen[1]" is-disabled="user.intakeNavDisabled[1]">
+      <p>WHAT TYPE OF HOUSING DO YOU LIVE IN?</p>
+      <div class="controls">
+        <div class="intake1">
+          <label class="btn btn-default" ng-model="user.housingType" btn-radio="'RS'" name="housing" ng-click="updateHousingType('RS')" ng-class="{ active: user.housingType == 'RS' }" required="">Rent-Stabilized</label>
+
+          <label class="btn btn-default" ng-model="user.housingType" btn-radio="'MR'" name="housing" ng-click="updateHousingType('MR')" ng-class="{ active: user.housingType == 'MR' }" required="">Market-Rate</label>
+        </div>
+        <div class="intake1">
+          <label class="btn btn-default" ng-model="user.housingType" btn-radio="'ML'" name="housing" ng-click="updateHousingType('ML')" ng-class="{ active: user.housingType == 'ML' }" required="">Mitchell-lama</label>
+
+          <label class="btn btn-default" ng-model="user.housingType" btn-radio="'NYCHA'" name="housing" ng-class="{ active: user.housingType == 'NYCHA' }" ng-click="updateHousingType('NYCHA')" required="">NYCHA/ Section 8</label>
+        </div>
       </div>
-      <div class="panel-body">
-        <a  class="btn btn-primary btn-block"
-            target="_blank"
-            href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform">
-            <span class="glyphicon glyphicon-plus pull-left"></span>
-            Add new resource
+      <div class="container">
+        <button class="btn btn-primary next-button" ng-click="openPanel(2)" ng-disabled="user.housingType===''">NEXT</button></div>
+      </div>
+      <div uib-accordion-group class="panel-default intake" heading="HOUSING COURT STATUS" is-open="user.intakeNavOpen[2]" is-disabled="user.intakeNavDisabled[2]">
+        <p>What is your current status?</p>
+        <div class="controls">
+          <div class="container">
+            <label class="btn btn-default" ng-model="user.housingType" btn-radio="'RS'" name="housing" ng-click="updateHousingCourt(true)" ng-class="{active: user.housingCourtStatus}" required="">I am currently involved in an active housing court case.</label>
+
+            <label class="btn btn-default" ng-model="user.housingType" btn-radio="'MR'" name="housing" ng-click="updateHousingCourt(false)" ng-class="{active: !user.housingCourtStatus}" required="">I need repairs or other housing support, but am not in an active court case.</label>
+          </div>
+        </div>
+        <div class="container">
+          <label class="btn btn-primary next-button" ng-click="openPanel(3)">NEXT</label></div>
+        </div>
+        <div uib-accordion-group class="panel-default intake" heading="ABOUT YOU" is-open="user.intakeNavOpen[3]" is-disabled="user.intakeNavDisabled[3]">
+          <p>Which of these applies to you?</p>
+          <div class="container">
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'income') }" ng-click="updateEligibilityTags('income')">I receive public assistance</label>
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'seniors') }" ng-click="updateEligibilityTags('seniors')">I am 62 years of age or older</label>
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'disability') }" ng-click="updateEligibilityTags('disability')">I have a disability</label>
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'lgbtq') }" ng-click="updateEligibilityTags('lgbtq')">I identify as LGBTQ+</label>
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'children') }" ng-click="updateEligibilityTags('children')">I have dependent children</label>
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.eligibilityTags,'health') }" ng-click="updateEligibilityTags('health')">I face serious/chronic health issues</label>
+          </div>
+          <div class="container"><label class="btn btn-primary next-button" ng-click="openPanel(4)">NEXT</label></div>
+
+        </div>
+        <div uib-accordion-group class="panel-default intake" heading="ISSUES" is-open="user.intakeNavOpen[4]" is-disabled="user.intakeNavDisabled[4]">
+          <p>Which issue(s) do you need help with?</p>
+          <div class="container">
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'eviction') }" ng-click="updateIssueTags('eviction')">Eviction</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'repairs') }" ng-click="updateIssueTags('repairs')">Getting repairs</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'overcharge') }" ng-click="updateIssueTags('overcharge')">Rent Overcharge</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'rent') }" ng-click="updateIssueTags('rent')">Paying my rent</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'lease') }" ng-click="updateIssueTags('lease')">Lease Renewal</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'succession') }" ng-click="updateIssueTags('succession')">Succession Rights</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'benefits') }" ng-click="updateIssueTags('benefits')">Subsidies/benefits</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'harassment') }" ng-click="updateIssueTags('harassment')">Landlord harassment</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'rights') }" ng-click="updateIssueTags('rights')">Learning about my tenant rights</label>
+
+            <label class="btn btn-default" ng-class="{ active: containsTag(user.issueTags,'organizing') }" ng-click="updateIssueTags('organizing')">Organizing my building</label>
+
+          </div>
+
+          <div class="container">
+            <div class="nav">
+              <label class="btn btn-primary next-button" ng-click="update();">FIND HELP</label>
+            </div>
+          </div>
+
+        </div>
+      </uib-accordion>
+    </div>
+
+    <div class="output referrals" ng-show="user.finishedIntake && !user.editSearchOpen"><!-- && !user.editSearchOpen" change-->
+      <carto-map></carto-map>
+      <div class="org type toggle">
+        <label class="btn btn-primary org_type" style= "background: #CD4968" ng-class="{ active: !containsTag(user.org_type,'community') }" ng-click="toggleOrgType('community')">community groups</label>
+        <label class="btn btn-primary org_type" style= "background: #FD7603" ng-class="{ active: !containsTag(user.org_type,'legal') }" ng-click="toggleOrgType('legal')">legal services</label>
+        <label class="btn btn-primary org_type" style= "background: #0096D7" ng-class="{ active: !containsTag(user.org_type,'govt') }" ng-click="toggleOrgType('govt')">elected officials</label>
+      </div>
+      <div ng-if="resources && resources.length > 0">
+        <a href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform" class="not-seeing-link" target="_blank">Are we missing someone? Let us know!</a>
+        <br />
+
+        <!-- <div ng-if="hasLocal"> -->
+        <!-- <label class="control-label">Show groups in:</label> -->
+        <!--<div class="btn-group btn-group-justified org-type-toggle">-->
+
+        <!-- </div> -->
+
+        <!-- <p class="lead">Results:</p> -->
+        <div ng-repeat="r in resources" class="panel resources-panel">
+          <div class="panel-heading resources-heading">
+            <h3 class="panel-title">
+              <span class="glyphicon glyphicon-stop"
+              style="margin-right: 10px;" ng-show="{{r.org_type === 'community'}}"></span>
+              {{ r.rownum }}. {{ r.organization }}</h3>
+          </div>
+          <div class="panel-body">
+            <!-- <a ng-href="http://maps.google.com/?q={{ r.address }}"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a> -->
+            <a ng-href="http://maps.google.com/?saddr={{ user.address }}&daddr={{ r.address }}" target="_blank"><p class="address">{{ r.address }} <em>({{ r.dist }}mi away)</em></p></a>
+            <p class="hours" ng-show="r.hours"><span class="glyphicon glyphicon-time pull-left" style="margin-right: 10px; color: #5D9CEC"></span>{{ r.hours }}</p>
+            <p class="services">{{ r.services }}</p>
+            <div class="btn-block">
+              <a class="btn btn-success" ng-href="tel:{{ r.contact_information }}"><span class="glyphicon glyphicon-earphone pull-left" style="margin-right: 10px"></span>{{ r.contact_information | tel }}</a>
+              <a class="btn btn-success edit-search" style="padding-left:40px; padding-right:40px;" ng-show="r.website"
+              ng-href="{{ r.website }}" target="_blank">WEBSITE</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel resources-panel missing-panel">
+        <div class="panel-heading">
+          <h3 class="panel-title">Are we missing someone? Let us know!</h3>
+        </div>
+        <div class="panel-body">
+          <a  class="btn btn-primary btn-block"
+          target="_blank"
+          href="https://docs.google.com/a/justfix.nyc/forms/d/1bD9_a5MmV3CIC4YEyQvkv9j2ExCyiX8xjdV6g5v1aCQ/viewform">
+          <span class="glyphicon glyphicon-plus pull-left"></span>
+          Add new resource
         </a>
       </div>
     </div>

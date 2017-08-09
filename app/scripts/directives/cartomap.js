@@ -60,7 +60,7 @@ angular.module('localResourcesApp')
 
           sublayers: [{
             sql: "SELECT * FROM nyc_cbos_locations_final",
-            cartocss: "#nyc_cbos_locations_final{marker-fill-opacity:0;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#F60;marker-allow-overlap:true}"
+            cartocss: "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#5F4690;marker-allow-overlap:true}#layer[org_type='community']{marker-fill:#CD4968;}#layer[org_type='legal']{marker-fill:#FD7603;}#layer[org_type='govt']{marker-fill:#0096D7;}"
           }]
         };
 
@@ -85,7 +85,7 @@ angular.module('localResourcesApp')
           var userTagString = userTags.toString();
           console.log(orgString, ' <<ORG TYPE STRING [MAPS]');
           console.log(userTagString, ' <<USER TAG STRING [MAPS]');
-          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_final AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization " + housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 ) ) T LIMIT 10";
+          var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_master_9_9_17 AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization " + housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 ) ) T LIMIT 20";
 
           /*var query = "SELECT *, row_number() OVER (ORDER BY dist ASC, score DESC) as rownum FROM ( SELECT loc.organization, loc.contact_information, loc.address, loc.services, loc.requirements, loc.housing_court, char_length(tags) AS score, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_final AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization "+ housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 )) T LIMIT 20"*/
 
@@ -96,12 +96,13 @@ angular.module('localResourcesApp')
 
           mainSublayer.set({
             sql: query,
-            cartocss: "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#5F4690;marker-allow-overlap:true}#nyc_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"
+            //cartocss: /*"#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#5F4690;marker-allow-overlap:true}#nyc_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"*/
+//ramp([org_type], #1D6996, #38A6A5), ('community', 'govt', 'legal'),
 
-
-            /*cartocss:
-            "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:ramp([nyc_cbos_locations_final.org_type], (#5F4690, #1D6996, #38A6A5, #0F8554), ('community', 'govt', 'legal', null), '=');marker-allow-overlap:true}#nyc_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"*/
+            cartocss:
+            "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-allow-overlap:true}#nyc_cbos_locations_final::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}#layer[org_type='community']{marker-fill:#CD4968;}#layer[org_type='legal']{marker-fill:#FD7603;}#layer[org_type='govt']{marker-fill:#0096D7;}"
           });
+//#nyc_cbos_locations_final[org_type='community']{marker-fill:#000000)}#nyc_cbos_locations_final[org_type='legal']{marker-fill:#b8d116)}#nyc_cbos_locations_final[org_type='govt']{marker-fill:#a6a6a6)}
 
           CartoDB.getSQL().getBounds(query).done(function(bounds) {
             //console.log(lat,lng);
