@@ -26,11 +26,15 @@ html, body {
   // overflow-x: hidden;
 }
 
+h2 {
+  font-size: 150%;
+}
 
 body {
-    background-color: #f1f2f6;
-    // position: relative;
-    // top:0;
+  //background-color: #f1f2f6;
+  background-color: #ffffff;
+  // position: relative;
+  // top:0;
 }
 
 
@@ -40,7 +44,7 @@ body {
   // top: 0;
 
   .container {
-
+    vertical-align: top;
   }
 
   .navbar-brand {
@@ -50,20 +54,20 @@ body {
 
     & > .logo > svg {
 
-        & * { fill: #0096d7; }
+      & * { fill: #0096d7; }
 
-        // user mobile
-        margin-top: 10px;
-        margin-bottom: 3px;
-        height: 20px;
-        width: 105px;
+      // user mobile
+      margin-top: 10px;
+      margin-bottom: 3px;
+      height: 20px;
+      width: 105px;
 
-        @media (min-width: $screen-sm-min) {
-          margin-top: 17px;
-          margin-bottom: 11px;
-          height: 25px;
-          width: 131px;
-        }
+      @media (min-width: $screen-sm-min) {
+        margin-top: 17px;
+        margin-bottom: 11px;
+        height: 25px;
+        width: 131px;
+      }
 
     }
   } //navbar-brand
@@ -124,6 +128,16 @@ body {
 
   &.main-subtext {
     margin-bottom: 20px;
+    font-size: 100%;
+  }
+  &.output-subtext {
+    line-height: 15px;
+    //background-color: #DEE0EB;
+    &.madlibs {
+      font-size: 75%;
+      //background-color:#f1f2f6;
+      padding:2%;
+    }
   }
 }
 
@@ -133,11 +147,13 @@ body {
 }
 
 
+
 .btn-block {
   max-width: 300px;
   margin: 20px auto 0 auto;
   padding-top: 10px;
   padding-bottom: 10px;
+  align-self: center;
 }
 
 .btn-primary {
@@ -148,6 +164,56 @@ body {
   }
 }
 
+.btn-primary:disabled {
+  background-color: #000;
+}
+
+.intake1 {
+  //height: 60px;
+  padding: 5px;
+}
+
+.btn-default, .btn-default:hover, .btn-default.active:focus, .btn-default:active:focus, .btn-default:visited, .btn-default:focus{
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 4px 0 #999999;
+  border-radius: 2px;
+  margin:3px;
+  word-wrap: break-word;
+  white-space:normal;
+  font-family:OpenSans-Light, OpenSans-Regular, sans-serif;
+  padding: 7px;
+  font-size: 14px;
+  width: 45%;
+  height: 100%;
+  border: 0px;
+}
+
+.btn-default.active, .btn-default:active, .btn-default.active:hover {
+  background-color: #0096D7;
+  color: #FFF;
+  border: 0px;
+}
+
+.label-default {
+  font-weight:normal;
+  font-size: 11px;
+  font-family:OpenSans-Bold;
+  background-color:inherit;
+  color:#000;
+  text-wrap: break-word;
+}
+
+
+.row {
+  margin:5px;
+}
+
+.block {
+  display:inline-block;
+}
+
+
+
 .btn-success {
   @include button-variant($btn-success-color, #8CC152, #8CC152);
   &:hover, &:active, &:focus {
@@ -156,6 +222,41 @@ body {
   }
 }
 
+.btn-basic {
+  //width: 150px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.edit-search, .edit-search.active, .edit-search:active, .edit-search:hover {
+  border: 2px solid #0096D7;
+  background-color: #FFF;
+  font-family: OpenSans-Regular;
+  font-size: 14px;
+  color: #0096D7;
+}
+.done-search, .done-search:hover {
+  background: #0096D7;
+  font-family: OpenSans-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.org_type{
+  border: 0px;
+  border-radius: 0px;
+  font-family: OpenSans-Light;
+  font-size: 12px;
+  color: #FFFFFF;
+  margin: 3px;
+}
+.org_type.active{
+  opacity: 0.3;
+}
+
+.refcard{
+  width: 45%;
+}
 
 .addr-search {
 
@@ -173,13 +274,13 @@ body {
   }
 
   @keyframes spin {
-      from { transform: scale(1) rotate(0deg); }
-      to { transform: scale(1) rotate(360deg); }
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
   }
 
   @-webkit-keyframes spin2 {
-      from { -webkit-transform: rotate(0deg); }
-      to { -webkit-transform: rotate(360deg); }
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
   }
 
 }
@@ -197,14 +298,30 @@ body {
 
 .not-seeing-link {
   float: right;
-  margin-bottom: 5px;
+  margin: 5px;
+  padding-bottom: 10px;
 }
 
+.panel-heading {
+    font-size: 25px;
+    color: #6C6C6C;
+    &.intake {
+      font-family: OpenSans-Bold;
+    }
+    &:disabled {
+      opacity: 50%;
+    }
+}
 
+.next-button {
+  width: 93%;
+  margin-top: 7px;
+  background-color: #0096D7;
+}
 
-
-
-
+.resources-panel {
+  box-shadow: 0 1px 4px 0 #999999;
+}
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
