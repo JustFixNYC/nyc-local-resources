@@ -200,13 +200,11 @@ body {
   font-family:OpenSans-Bold;
   background-color:inherit;
   color:#000;
-  text-wrap: break-word;
+//word-break: break-all;
+  white-space: normal;
+  padding:0px;
 }
 
-
-.row {
-  margin:5px;
-}
 
 .block {
   display:inline-block;
@@ -246,12 +244,22 @@ body {
   border: 0px;
   border-radius: 0px;
   font-family: OpenSans-Light;
-  font-size: 12px;
+  font-size: 10px;
   color: #FFFFFF;
   margin: 3px;
+  width: 120px;
+  text-align: right
 }
 .org_type.active{
   opacity: 0.3;
+}
+
+.checkbox{
+  width: 70px;
+}
+
+.org_type.unselect{
+  visibility: 0;
 }
 
 .refcard{
@@ -317,6 +325,9 @@ body {
   width: 93%;
   margin-top: 7px;
   background-color: #0096D7;
+  [disabled] {
+    opacity: 30%;
+  }
 }
 
 .resources-panel {
@@ -427,6 +438,10 @@ body {
   p + h4 {
     margin-top: 28px;
   }
+}
+
+.uib-accordion-heading.disabled, .uib-accordion-heading.disabled:hover, .uib-accordion-heading.disabled:focus {
+  opacity: 30%;
 }
 
 /* Responsive: Portrait tablets and up */
