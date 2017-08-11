@@ -18,7 +18,7 @@ angular.module('localResourcesApp')
   $scope.user.org_type = ['legal', 'community', 'govt'];
   $scope.user.userTags = []; //composite of all tags (incl housingType, eligibilityTags, and issueTags)
   $scope.user.housingType = ''; //answer to intake question 1
-  $scope.user.housingCourtStatus = false; //answer to intake question 2
+  $scope.user.housingCourtStatus = ''; //answer to intake question 2
   $scope.user.eligibilityTags = []; //intake question 3
   $scope.user.issueTags = []; //intake question 4
   //eligibility screener status
@@ -26,11 +26,55 @@ angular.module('localResourcesApp')
   $scope.user.editSearchOpen = false;
   $scope.user.intakeNavOpen = [false,false,false,false,false];
   $scope.user.intakeNavDisabled = [false, false, false, false, false];
-  $scope.org_type_code = {
-    'community': 'green',
-    'legal': 'blue',
-    'govt': 'red'
-  };
+  $scope.user.showBookmarks = false;
+  $scope.bookmarks = [];
+  $scope.intake = {};
+  $scope.intake.eligibility = {
+    'income': {tag: 'income', question: 'I receive public assistance', madlibs: 'are low-income'},
+    'seniors': {tag: 'seniors', question: 'I am 62 years of age or older', madlibs: 'are 62 years old or older'},
+    'disability': {tag: 'disability', question: 'I have a disability', madlibs: 'have a disability'},
+    'lgbtq': {tag: 'lgbtq', question: 'I identify as LGBTQ+', madlibs: 'identify as LGBTQ+'},
+    'children': {tag: 'children', question: 'I have dependent children', madlibs: 'have dependent children'},
+    'health': {tag: 'health', question: 'I face serious/chronic health issues', madlibs: 'have serious health issues'},
+  }; //eventually use this to clean up html/reformat madlibs
+
+  $scope.tagDict = {
+    'income': 'receives public benefits',
+    'seniors':'is 62 years old or older',
+    'disability': 'has a disability',
+    'lgbtq': 'identifies as LGBTQ+',
+    'children': 'has dependent children',
+    'health': 'has serious health issues',
+    'RS': 'rent-stabilized',
+    'MR': 'market-rate',
+    'SSH': 'senior/supportive',
+    'SL': 'sublet',
+    'ML': 'Mitchell-lama',
+    'NYCHA': 'NYCHA/Section 8',
+    'o': ' ',
+    'eviction': 'eviction',
+    'repairs': 'getting repairs',
+    'overcharge': 'rent overcharge',
+    'rent': 'paying rent',
+    'lease': 'lease renewal',
+    'succession': 'succession rights',
+    'benefits': 'subsidies/benefits',
+    'harassment': 'landlord harassment',
+    'rights': 'learning about tenant rights',
+    'organizing': 'organizing tenants',
+    court_status: {
+      true : 'active court case',
+      false : 'no case'
+    }
+    //'mediation': 'tenant-landlord mediation'
+  }
+
+  $scope.colorCodeOrgType = {
+    'community' : 'color:#CD4968',
+    'legal' : 'color:#FD7603',
+    'govt' : 'color:#0096D7'
+  }
+
 
   if(!$window.Geocoder) {
     // $log.info('ERROR: no geocoder set.');
@@ -67,13 +111,15 @@ angular.module('localResourcesApp')
           });
         }
         ga('send', 'event', 'Map', 'search-found', 'Initial');
-        if (callback && $location.search().search) callback; //only open search once address has been loaded- this is not working
+        if (callback && $location.search().search) callback(); //only open search once address has been loaded- this is not working
         $scope.$apply();
       } else {
         $scope.error = true;
         $scope.$apply();
         if(typeof Rollbar !== "undefined") { Rollbar.error("Geocode was not successful for the following reason: " + status); }
         console.error('Geocode was not successful for the following reason: ' + status);
+        $scope.user.editSearchOpen = false;
+        $location.search('edit', false);
       }
     });
   };
@@ -102,7 +148,7 @@ angular.module('localResourcesApp')
               found: results[0].formatted_address
             });
           }
-          if (callback && $location.search().search) callback; //only open search once address has been loaded- this is not working
+          if (callback && $location.search().search) callback(); //only open search once address has been loaded- this is not working
           $scope.$apply();
         } else {
           $scope.error = true;
@@ -159,14 +205,16 @@ angular.module('localResourcesApp')
   }
   $scope.updateEligibilityTags = function(tag){
     $scope.updateTags($scope.user.eligibilityTags, tag);
+    $location.search('issues', $scope.user.eligibilityTags);
+    console.log('adding tag ', tag);
   }
   $scope.updateIssueTags = function(tag){
     $scope.updateTags($scope.user.issueTags, tag);
     $location.search('issues', $scope.user.issueTags);
     //adds "mediation" tag if any of the following issue tags are selected by user
-    if (['repairs', 'overcharge', 'rent', 'lease', 'succession', 'harassment'].indexOf('mediation') == -1 && (!$scope.containsTag($scope.user.issueTags, 'mediation'))) {
+    /*if (['repairs', 'overcharge', 'rent', 'lease', 'succession', 'harassment'].indexOf('mediation') == -1 && (!$scope.containsTag($scope.user.issueTags, 'mediation'))) {
       $scope.user.issueTags.push('mediation');
-    }
+    }*/
     $location.search('you', $scope.user.eligibilityTags);
   }
 
@@ -247,11 +295,10 @@ angular.module('localResourcesApp')
   };
 
 //If single search param is encoded as a string instead of array, use this function to convert to array before assigning to an array type
-  $scope.stringToArray = function(object){
+  var stringToArray = function(object){
     if (typeof object == "string") object = [object];
     return object;
   }
-
 
   //Load data from url based on pre-existing search parameters
   if($location.search().search) {
@@ -260,7 +307,7 @@ angular.module('localResourcesApp')
     $scope.searchAddr();
   }
   if($location.search().type) {
-    $scope.user.org_type = $scope.stringToArray($location.search().type);
+    $scope.user.org_type = stringToArray($location.search().type);
     console.log('ORG TYPE', $scope.user.org_type);
   }
   if($location.search().housing){
@@ -268,15 +315,15 @@ angular.module('localResourcesApp')
     console.log('HOUSING TYPE', $scope.user.housingType);
   }
   if($location.search().court){
-    $scope.user.housingCourtStatus = $location.search().court;
+    $scope.user.housingCourtStatus = ($location.search().court == true);
     console.log('COURT STATUS', $scope.user.housingCourtStatus);
   }
   if($location.search().you){
-    $scope.user.eligibilityTags = $scope.stringToArray($location.search().you);
+    $scope.user.eligibilityTags = stringToArray($location.search().you);
     console.log('ELIGIBILITY', $scope.user.eligibilityTags);
   }
   if($location.search().issues){
-    $scope.user.issueTags = $scope.stringToArray($location.search().issues);
+    $scope.user.issueTags = stringToArray($location.search().issues);
     console.log('ISSUE TAGS', $scope.user.issueTags);
   }
   if($location.search().done){
