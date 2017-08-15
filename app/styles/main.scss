@@ -131,12 +131,13 @@ body {
     font-size: 100%;
   }
   &.output-subtext {
-    line-height: 15px;
+    //line-height: 15px;
     //background-color: #DEE0EB;
     &.madlibs {
-      font-size: 75%;
+      font-size: 13px;
       //background-color:#f1f2f6;
-      padding:2%;
+      padding-top:2%;
+      padding-bottom:2%;
     }
   }
 }
@@ -196,7 +197,7 @@ body {
 
 .label-default {
   font-weight:normal;
-  font-size: 11px;
+  font-size: 13px;
   font-family:OpenSans-Bold;
   background-color:inherit;
   color:#000;
@@ -222,7 +223,7 @@ body {
 
 .btn-basic {
   //width: 150px;
-  width: 100%;
+  //width: 100%;
   margin-bottom: 10px;
 }
 
@@ -316,7 +317,7 @@ body {
     &.intake {
       font-family: OpenSans-Bold;
     }
-    &:disabled {
+    &:disabled, &:disabled {
       opacity: 50%;
     }
 }
@@ -440,7 +441,7 @@ body {
   }
 }
 
-.uib-accordion-heading.disabled, .uib-accordion-heading.disabled:hover, .uib-accordion-heading.disabled:focus {
+.uib-accordion-heading:disabled{
   opacity: 30%;
 }
 

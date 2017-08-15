@@ -60,7 +60,8 @@ angular.module('localResourcesApp')
       //all the variables we want from the database
       query += "SELECT loc.organization, loc.contact_information, loc.address, loc.services, loc.requirements, loc.housing_court, loc.website, loc.hours, loc.org_type, loc.tags, loc.cartodb_id, ";
 
-      query += userTags.indexOf('eviction') > -1 ? "case when (loc.org_type='legal') then 2 else 0 end as legal_score, " : "0 as legal_score, ";
+      query += housingCourt ? "6 " : (userTags.indexOf('eviction') > -1 ? "case when (loc.org_type='legal') then 3 else 0 end " : "case when (loc.org_type='legal') then -3 else 3 end ");
+      query += "as legal_score, ";
 
       for (var tag in userTags) {
         console.log('QUERY LOOKING AT TAG ', userTags[tag]);
@@ -68,11 +69,11 @@ angular.module('localResourcesApp')
         console.log(query);
       }
 
-      query += "case when (position(loc.requirements in '" +userTagString+ "') != 0) then 2 else 1 end as scope_score, ";
+      query += "case when (position(loc.requirements in '" +userTagString+ "') != 0) then 3 else 0 end as scope_score, ";
       query += "case when (position('mediation' in loc.tags) != 0) then 2 else 0 end as mediation_score, ";
       query += "round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist ";
 
-      query += "FROM nyc_cbos_locations_master_9_9_17 AS loc, nyc_cbos_service_areas_copy_new_entries AS sa ";
+      query += "FROM nyc_cbos_locations_master_9_14_17 AS loc, final_nyc_cbos_service_areas_copy_new_entries_copy AS sa ";
 
       //check if address is in catchment area of organization
       query += "WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) ";

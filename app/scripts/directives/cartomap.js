@@ -88,7 +88,46 @@ angular.module('localResourcesApp')
           console.log(userTagString, ' <<USER TAG STRING [MAPS]');
           /*var query = "SELECT *, row_number() OVER (ORDER BY dist) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_master_9_9_17 AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization " + housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 ) ) T LIMIT 20";*/
 
-          var query = "SELECT *, row_number() OVER (ORDER BY (eviction_score*"+ prioritizeLegal +") DESC, dist ASC) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, case when (loc.org_type='legal') then 20 when (position('eviction' in loc.tags) != 0) then 10 else 1 end as eviction_score, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_master_9_9_17 AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization "+ housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 )) T LIMIT 20";
+          /*var query = "SELECT *, row_number() OVER (ORDER BY (eviction_score*"+ prioritizeLegal +") DESC, dist ASC) as rownum FROM ( SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, case when (loc.org_type='legal') then 20 when (position('eviction' in loc.tags) != 0) then 10 else 1 end as eviction_score, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_master_9_9_17 AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization "+ housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 )) T LIMIT 20";*/
+
+          var query = "SELECT *, row_number() OVER ";
+          //formula for scoring
+          //query += "(ORDER BY (((legal_score + eviction_relevance)*"+ evictionScore +") + mediation_score*" + mediation + " + scope_score) DESC, dist ASC) as rownum ";
+          //query += "(ORDER BY (legal_score + mediation_score*" + mediation + " + scope_score";
+          query += "(ORDER BY (legal_score + scope_score";
+          for (var tag in userTags) {
+            query += " + "+userTags[tag]+"";
+          }
+          //query +=") DESC, dist ASC) as rownum FROM ( ";
+          query +=") - dist*.5 DESC) as rownum FROM ( "; //add variable for dist weight
+
+          //all the variables we want from the database
+          query += "SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, ";
+
+          query += userTags.indexOf('eviction') > -1 ? "case when (loc.org_type='legal') then 2 else 0 end as legal_score, " : "0 as legal_score, ";
+
+          for (var tag in userTags) {
+            console.log('QUERY LOOKING AT TAG ', userTags[tag]);
+            query += userTags.indexOf(userTags[tag]) > -1 ? "case when ((position('"+userTags[tag]+"' in loc.tags) != 0) OR (position('"+userTags[tag]+"' in loc.services) != 0)) then 3 else 0 end as "+userTags[tag]+", " : "0 as "+userTags[tag]+", ";
+            console.log(query);
+          }
+
+          query += "case when (position(loc.requirements in '" +userTagString+ "') != 0) then 2 else 1 end as scope_score, ";
+          query += "case when (position('mediation' in loc.tags) != 0) then 2 else 0 end as mediation_score, ";
+          query += "round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist ";
+
+          query += "FROM nyc_cbos_locations_master_9_14_17 AS loc, final_nyc_cbos_service_areas_copy_new_entries_copy AS sa ";
+
+          //check if address is in catchment area of organization
+          query += "WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) ";
+
+          query += "AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization "+ housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 )) ";
+
+          //number of results shown
+          query += "T LIMIT 20";
+
+
+
 
           /*var query = "SELECT *, row_number() OVER (ORDER BY dist ASC, score DESC) as rownum FROM ( SELECT loc.organization, loc.contact_information, loc.address, loc.services, loc.requirements, loc.housing_court, char_length(tags) AS score, round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist FROM nyc_cbos_locations_final AS loc, nyc_cbos_service_areas_copy_new_entries AS sa WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') AND loc.organization = sa.organization "+ housingCourtStatusQuery + " AND (position(loc.org_type in '" + orgString + "') != 0 )) T LIMIT 20"*/
 

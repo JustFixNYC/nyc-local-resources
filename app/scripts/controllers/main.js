@@ -50,8 +50,9 @@ angular.module('localResourcesApp')
     'SSH': 'senior/supportive',
     'SL': 'sublet',
     'ML': 'Mitchell-lama',
-    'NYCHA': 'NYCHA/Section 8',
-    'o': ' ',
+    'NYCHA': 'NYCHA',
+    'SECT8': 'Section 8',
+    'o': 'other',
     'eviction': 'eviction',
     'repairs': 'getting repairs',
     'overcharge': 'rent overcharge',
@@ -205,7 +206,7 @@ angular.module('localResourcesApp')
   }
   $scope.updateEligibilityTags = function(tag){
     $scope.updateTags($scope.user.eligibilityTags, tag);
-    $location.search('issues', $scope.user.eligibilityTags);
+    $location.search('you', $scope.user.eligibilityTags);
     console.log('adding tag ', tag);
   }
   $scope.updateIssueTags = function(tag){
