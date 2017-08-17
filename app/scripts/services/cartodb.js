@@ -71,8 +71,6 @@ angular.module('localResourcesApp')
       for (var tag in userTags) {
         query += userTags.indexOf(userTags[tag]) > -1 ? "case when (position('"+userTags[tag]+"' in loc.tags) != 0) then 1 else 0 end as "+userTags[tag]+", " : "0 as "+userTags[tag]+", ";
       }
-
-      //if
       query += "case when (position(loc.requirements in '" +userTagString+ "') != 0) then 2 else 0 end as scope_score, ";
       query += "round( (ST_Distance( ST_GeomFromText('Point(" + lng + " " + lat + ")', 4326)::geography, loc.the_geom::geography ) / 1609)::numeric, 1 ) AS dist, ";
       //put elected officials at the bottom of the list
