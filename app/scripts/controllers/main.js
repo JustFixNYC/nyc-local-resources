@@ -50,8 +50,9 @@ angular.module('localResourcesApp')
     'SSH': 'senior/supportive',
     'SL': 'sublet',
     'ML': 'Mitchell-lama',
-    'NYCHA': 'NYCHA/Section 8',
-    'o': ' ',
+    'NYCHA': 'NYCHA',
+    'SECT8': 'Section 8',
+    'otherhousing': 'other',
     'eviction': 'eviction',
     'repairs': 'getting repairs',
     'overcharge': 'rent overcharge',
@@ -62,12 +63,36 @@ angular.module('localResourcesApp')
     'harassment': 'landlord harassment',
     'rights': 'learning about tenant rights',
     'organizing': 'organizing tenants',
+    'scrie': 'applying for SCRIE/DRIE',
+    'otherissue': 'other issues',
     court_status: {
       true : 'active court case',
       false : 'no case'
     }
-    //'mediation': 'tenant-landlord mediation'
   }
+    $scope.hotlines = [
+      {
+        'organization': 'New York State Homes and Community Renewal (HCR)',
+        'contact_information': '7187396400',
+        'services': 'HCR enforces the housing laws regarding rent-controlled or rent-stabilized apartments.'
+      },
+      {
+        'organization' : 'Housing Court Answers',
+        'contact_information': '2129624795',
+        'hours': 'Mon-Thurs, 9am - 5pm',
+        'services': 'Provides information about Court procedures, landlord/tenant rules and regulations, enforcement of housing code violations, referrals for free legal help, and referrals to community organizations that help with housing problems.'
+      },
+      {
+        'organization': 'MetCouncil on Housing',
+        'contact_information': '2129790611',
+        'hours': 'Mon-Wed 1:30 - 8:00pm; Fridays 1:30pm - 5pm',
+        'services': 'The Metropolitan Council on Housing tenant rights telephone hotline is free and open to any tenant living in New York City.'
+      }
+    ]
+    $scope.hotlineCond = [$scope.user.issueTags.indexOf('lease') > -1, true, $scope.user.housingCourtStatus];
+
+    //'mediation': 'tenant-landlord mediation'
+
 
   $scope.colorCodeOrgType = {
     'community' : 'color:#CD4968',
@@ -205,7 +230,7 @@ angular.module('localResourcesApp')
   }
   $scope.updateEligibilityTags = function(tag){
     $scope.updateTags($scope.user.eligibilityTags, tag);
-    $location.search('issues', $scope.user.eligibilityTags);
+    $location.search('you', $scope.user.eligibilityTags);
     console.log('adding tag ', tag);
   }
   $scope.updateIssueTags = function(tag){
@@ -293,6 +318,10 @@ angular.module('localResourcesApp')
       alert("Error: " + errors[error.code]);
     }
   };
+  //Show DHCR as a resource if user is facing issues with lease, paying rent, or overcharge
+  $scope.user.DHCRbool = function(){
+    return containsTag($scope.user.issueTags, 'lease') || containsTag($scope.user.issueTags, 'rent') || containsTag($scope.user.issueTags, 'overcharge');
+  }
 
 //If single search param is encoded as a string instead of array, use this function to convert to array before assigning to an array type
   var stringToArray = function(object){
