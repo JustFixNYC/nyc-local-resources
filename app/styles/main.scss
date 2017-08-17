@@ -136,8 +136,6 @@ body {
     &.madlibs {
       font-size: 13px;
       //background-color:#f1f2f6;
-      padding-top:2%;
-      padding-bottom:2%;
     }
   }
 }
@@ -187,12 +185,14 @@ body {
   width: 45%;
   height: 100%;
   border: 0px;
+  vertical-align: top;
 }
 
 .btn-default.active, .btn-default:active, .btn-default.active:hover {
   background-color: #0096D7;
   color: #FFF;
   border: 0px;
+  box-shadow: none;
 }
 
 .label-default {
@@ -211,13 +211,26 @@ body {
   display:inline-block;
 }
 
+.badge {
+  font-size: 12px;
+  font-weight:normal;
+  border-radius:6px;
+  padding:4px;
+  border: 1px solid #585858;
+  color: #585858;
+  background-color: #FFF;
+}
 
 
 .btn-success {
+  //width:100%;
   @include button-variant($btn-success-color, #8CC152, #8CC152);
   &:hover, &:active, &:focus {
     background-color: #A0D468;
     border-color: #A0D468;
+  }
+  &.callbutton{
+    width:100%;
   }
 }
 
@@ -225,6 +238,8 @@ body {
   //width: 150px;
   //width: 100%;
   margin-bottom: 10px;
+  border-radius:0px;
+  margin-left: 20px;
 }
 
 .edit-search, .edit-search.active, .edit-search:active, .edit-search:hover {
@@ -233,12 +248,17 @@ body {
   font-family: OpenSans-Regular;
   font-size: 14px;
   color: #0096D7;
+  display: inline;
+  float:right;
 }
 .done-search, .done-search:hover {
   background: #0096D7;
   font-family: OpenSans-Regular;
   font-size: 14px;
   color: #FFFFFF;
+  display: inline;
+  float:right;
+  border-radius:0px;
 }
 
 .org_type{
@@ -302,7 +322,7 @@ body {
 }
 
 .org-type-toggle {
-  margin-bottom: 15px;
+  //margin-bottom: 15px;
 }
 
 .not-seeing-link {
@@ -320,7 +340,14 @@ body {
     &:disabled, &:disabled {
       opacity: 50%;
     }
+
 }
+
+.panel-heading .panel-title .collapse-toggle{
+display: block;
+padding: 10px;
+}
+
 
 .next-button {
   width: 93%;

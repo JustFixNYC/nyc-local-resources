@@ -99,7 +99,7 @@ angular.module('localResourcesApp')
             query += " + "+userTags[tag]+"";
           }
           //query +=") DESC, dist ASC) as rownum FROM ( ";
-          query +=") - dist*.5 DESC) as rownum FROM ( "; //add variable for dist weight
+          query +=" - dist) DESC) as rownum FROM ( "; //add variable for dist weight
 
           //all the variables we want from the database
           query += "SELECT loc.cartodb_id, loc.the_geom, loc.the_geom_webmercator, loc.org_type, ";
