@@ -92,6 +92,7 @@ angular.module('localResourcesApp')
     $scope.hotlineCond = [$scope.user.issueTags.indexOf('lease') > -1, true, $scope.user.housingCourtStatus];
 
     //'mediation': 'tenant-landlord mediation'
+    // hi mayuka!
 
 
   $scope.colorCodeOrgType = {
