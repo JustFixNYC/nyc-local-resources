@@ -138,19 +138,13 @@ angular.module('localResourcesApp')
 
           mainSublayer.set({
             sql: query,
-            //cartocss: /*"#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#5F4690;marker-allow-overlap:true}#nyc_cbos_locations::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}"*/
-//ramp([org_type], #1D6996, #38A6A5), ('community', 'govt', 'legal'),
-
             cartocss:
             "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-allow-overlap:true}#nyc_cbos_locations_final::labels{text-name:[rownum];text-face-name:'DejaVu Sans Book';text-size:20;text-label-position-tolerance:10;text-fill:#000;text-halo-fill:#FFF;text-halo-radius:2;text-dy:-10;text-allow-overlap:true;text-placement:point;text-placement-type:simple}#layer[org_type='community']{marker-fill:#CD4968;}#layer[org_type='legal']{marker-fill:#FD7603;}#layer[org_type='govt']{marker-fill:#0096D7;}"
           });
-//#nyc_cbos_locations_final[org_type='community']{marker-fill:#000000)}#nyc_cbos_locations_final[org_type='legal']{marker-fill:#b8d116)}#nyc_cbos_locations_final[org_type='govt']{marker-fill:#a6a6a6)}
+
 
           CartoDB.getSQL().getBounds(query).done(function(bounds) {
-            //console.log(lat,lng);
             bounds.push([lat,lng]);
-            //console.log(bounds);
-          //$rootScope.cartoSQL.getBounds(query).done(function(bounds) {
             map.fitBounds(bounds, { padding: [10,10] });
           });
         };

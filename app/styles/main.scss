@@ -179,7 +179,7 @@ body {
   margin:3px;
   word-wrap: break-word;
   white-space:normal;
-  font-family:OpenSans-Light, OpenSans-Regular, sans-serif;
+  //font-family:OpenSans-Light, OpenSans-Regular, sans-serif;
   padding: 7px;
   font-size: 14px;
   width: 45%;
@@ -198,7 +198,7 @@ body {
 .label-default {
   font-weight:normal;
   font-size: 13px;
-  font-family:OpenSans-Bold;
+  font-weight: bold;
   background-color:inherit;
   color:#000;
 //word-break: break-all;
@@ -215,12 +215,11 @@ body {
   font-size: 12px;
   font-weight:normal;
   border-radius:6px;
-  padding:4px;
-  border: 1px solid #585858;
-  color: #585858;
-  background-color: #FFF;
+  padding:5px;
+  border: 1px solid #0096D7;
+  color: #FFF;
+  background-color: #0096D7;
 }
-
 
 .btn-success {
   //width:100%;
@@ -245,7 +244,6 @@ body {
 .edit-search, .edit-search.active, .edit-search:active, .edit-search:hover {
   border: 2px solid #0096D7;
   background-color: #FFF;
-  font-family: OpenSans-Regular;
   font-size: 14px;
   color: #0096D7;
   display: inline;
@@ -253,7 +251,6 @@ body {
 }
 .done-search, .done-search:hover {
   background: #0096D7;
-  font-family: OpenSans-Regular;
   font-size: 14px;
   color: #FFFFFF;
   display: inline;
@@ -261,10 +258,23 @@ body {
   border-radius:0px;
 }
 
+.fixed-header {
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.map-container {
+  margin-top: 20px;
+}
+
+.org-type-toggle {
+  margin-top: -20px;
+}
 .org_type{
   border: 0px;
   border-radius: 0px;
-  font-family: OpenSans-Light;
   font-size: 10px;
   color: #FFFFFF;
   margin: 3px;
@@ -335,7 +345,7 @@ body {
     font-size: 25px;
     color: #6C6C6C;
     &.intake {
-      font-family: OpenSans-Bold;
+      font-weight:bold;
     }
     &:disabled, &:disabled {
       opacity: 50%;
