@@ -111,10 +111,7 @@ body {
     @media (min-width: $screen-sm-min) {
       top: 15px;
     }
-
   }
-
-
 } // header
 
 #map {
@@ -131,11 +128,8 @@ body {
     font-size: 100%;
   }
   &.output-subtext {
-    //line-height: 15px;
-    //background-color: #DEE0EB;
     &.madlibs {
       font-size: 13px;
-      //background-color:#f1f2f6;
     }
   }
 }
@@ -179,7 +173,7 @@ body {
   margin:3px;
   word-wrap: break-word;
   white-space:normal;
-  font-family:OpenSans-Light, OpenSans-Regular, sans-serif;
+  //font-family:OpenSans-Light, OpenSans-Regular, sans-serif;
   padding: 7px;
   font-size: 14px;
   width: 45%;
@@ -198,14 +192,13 @@ body {
 .label-default {
   font-weight:normal;
   font-size: 13px;
-  font-family:OpenSans-Bold;
+  font-weight: bold;
   background-color:inherit;
   color:#000;
 //word-break: break-all;
   white-space: normal;
   padding:0px;
 }
-
 
 .block {
   display:inline-block;
@@ -215,15 +208,13 @@ body {
   font-size: 12px;
   font-weight:normal;
   border-radius:6px;
-  padding:4px;
-  border: 1px solid #585858;
-  color: #585858;
-  background-color: #FFF;
+  padding:5px;
+  border: 1px solid #0096D7;
+  color: #FFF;
+  background-color: #0096D7;
 }
 
-
 .btn-success {
-  //width:100%;
   @include button-variant($btn-success-color, #8CC152, #8CC152);
   &:hover, &:active, &:focus {
     background-color: #A0D468;
@@ -235,8 +226,6 @@ body {
 }
 
 .btn-basic {
-  //width: 150px;
-  //width: 100%;
   margin-bottom: 10px;
   border-radius:0px;
   margin-left: 20px;
@@ -245,7 +234,6 @@ body {
 .edit-search, .edit-search.active, .edit-search:active, .edit-search:hover {
   border: 2px solid #0096D7;
   background-color: #FFF;
-  font-family: OpenSans-Regular;
   font-size: 14px;
   color: #0096D7;
   display: inline;
@@ -253,7 +241,6 @@ body {
 }
 .done-search, .done-search:hover {
   background: #0096D7;
-  font-family: OpenSans-Regular;
   font-size: 14px;
   color: #FFFFFF;
   display: inline;
@@ -261,10 +248,23 @@ body {
   border-radius:0px;
 }
 
+.fixed-header {
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.map-container {
+  margin-top: 20px;
+}
+
+.org-type-toggle {
+  margin-top: -20px;
+}
 .org_type{
   border: 0px;
   border-radius: 0px;
-  font-family: OpenSans-Light;
   font-size: 10px;
   color: #FFFFFF;
   margin: 3px;
@@ -298,8 +298,6 @@ body {
   .glyphicon.spinning {
     -webkit-animation: spin2 1s infinite linear;
     animation: spin 1s infinite linear;
-
-
   }
 
   @keyframes spin {
@@ -335,7 +333,7 @@ body {
     font-size: 25px;
     color: #6C6C6C;
     &.intake {
-      font-family: OpenSans-Bold;
+      font-weight:bold;
     }
     &:disabled, &:disabled {
       opacity: 50%;
@@ -395,7 +393,6 @@ padding: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
   }
-
 }
 
 /* Custom page footer */
