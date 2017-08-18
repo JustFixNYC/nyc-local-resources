@@ -111,10 +111,7 @@ body {
     @media (min-width: $screen-sm-min) {
       top: 15px;
     }
-
   }
-
-
 } // header
 
 #map {
@@ -131,11 +128,8 @@ body {
     font-size: 100%;
   }
   &.output-subtext {
-    //line-height: 15px;
-    //background-color: #DEE0EB;
     &.madlibs {
       font-size: 13px;
-      //background-color:#f1f2f6;
     }
   }
 }
@@ -206,7 +200,6 @@ body {
   padding:0px;
 }
 
-
 .block {
   display:inline-block;
 }
@@ -222,7 +215,6 @@ body {
 }
 
 .btn-success {
-  //width:100%;
   @include button-variant($btn-success-color, #8CC152, #8CC152);
   &:hover, &:active, &:focus {
     background-color: #A0D468;
@@ -234,8 +226,6 @@ body {
 }
 
 .btn-basic {
-  //width: 150px;
-  //width: 100%;
   margin-bottom: 10px;
   border-radius:0px;
   margin-left: 20px;
@@ -308,8 +298,6 @@ body {
   .glyphicon.spinning {
     -webkit-animation: spin2 1s infinite linear;
     animation: spin 1s infinite linear;
-
-
   }
 
   @keyframes spin {
@@ -405,7 +393,6 @@ padding: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
   }
-
 }
 
 /* Custom page footer */

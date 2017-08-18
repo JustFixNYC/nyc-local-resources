@@ -69,11 +69,9 @@
         </div>
         <p>What type of housing do you live in?</p>
         <div class="container">
-
           <span ng-repeat="choice in intake.housing">
             <label class="btn btn-default" ng-model="user.housingType" ng-click="updateHousingType(choice.tag); openPanel(2)" ng-class="{ active: user.housingType == choice.tag }" required="">{{choice.question}}</label>
           </span>
-
         </div>
       </div>
 
@@ -129,13 +127,8 @@
       </div>
     </uib-accordion>
   </div>
-  <div ng-show="(user.finishedIntake && !user.editSearchOpen) || (!user.finishedIntake && !user.editSearchOpen)">
-
-    <div class="map-container">
-      <carto-map></carto-map>
-    </div>
-
-
+  <div class="map-container" ng-show="!user.editSearchOpen">
+    <carto-map></carto-map>
     <div class="org-type-toggle" ng-show="user.finishedIntake">
       <span class="h5">Filter by: </span>
       <button class="btn btn-primary org_type" style= "background: #CD4968" ng-class="{ active: !containsTag(user.org_type,'community') }" ng-click="toggleOrgType('community')">
@@ -188,6 +181,7 @@
             style="color:#0096D7" ng-if="r.org_type === 'govt'"></span>
             {{ r.rownum }}. {{ r.organization }}
             <!--<span ng-click="updateTags(bookmarks, r.cartodb_id)" ng-class="{'glyphicon glyphicon-star pull-right': containsTag(bookmarks, r.cartodb_id), 'glyphicon glyphicon-star-empty pull-right': !containsTag(bookmarks, r.cartodb_id)}"></span>-->
+            <!--Use above for adding bookmark icon & functionality to each panel-->
           </h3>
         </div>
         <div class="panel-body">
@@ -238,8 +232,5 @@
     </div>
   </div>
 </div>
-
-
 </div>
-
 </div>

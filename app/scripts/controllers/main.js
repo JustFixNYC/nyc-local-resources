@@ -27,7 +27,7 @@ angular.module('localResourcesApp')
   $scope.user.intakeNavOpen = [false,false,false,false,false];
   $scope.user.intakeNavDisabled = [false, false, false, false, false];
   $scope.user.showBookmarks = false;
-  $scope.bookmarks = [];
+  $scope.bookmarks = []; //when bookmark feature is added, add cartodb_id to this array
   $scope.intake = {};
 
   //Housing tags and their translations for display
@@ -209,36 +209,41 @@ angular.module('localResourcesApp')
     update(); //updates entire search (re-calls query)
   };
 
-  //Assigns selected housing type
+  //Assigns selected housing type to stored variable
   $scope.updateHousingType = function(tag){
     $location.search('housing', tag);
     $scope.user.housingType = tag;
     $scope.user.intakeNavDisabled[1] = false;
   }
+  //Assigns selected housing court status to stored variable
   $scope.updateHousingCourt = function(status){
     $location.search('court', status);
     $scope.user.housingCourtStatus = status;
   }
+  //Assigns selected tags to stored array of eligibility
   $scope.updateEligibilityTags = function(tag){
     $scope.updateTags($scope.user.eligibilityTags, tag);
     $location.search('you', $scope.user.eligibilityTags);
   }
+  //Assigns selected tags to stored array of issues
   $scope.updateIssueTags = function(tag){
     $scope.updateTags($scope.user.issueTags, tag);
     $location.search('issues', $scope.user.issueTags);
   }
-
+  //Settings when user edits search from output page
   $scope.editSearch = function(){
     toggleSearch();
     $scope.user.intakeNavDisabled = [false, false, false, false, false];
   }
 
+  //Settings when user exits eligibility screener and views updated output
   $scope.doneSearch = function(){
     toggleSearch();
     $scope.user.org_type = ['legal','community', 'govt'];
     update();
   }
 
+  //Settings when user begins screener for the first time
   $scope.openIntake = function(){
     $scope.searchAddr();
     toggleSearch();
@@ -270,7 +275,6 @@ angular.module('localResourcesApp')
     CartoDB.queryByLatLng(lat, lng, orgType, housingCourtStatus, userTags)
     .done(function (data) {
       if(data.rows.length == 0) {
-        // $log.info('NO RESULTS=' + $scope.user.address);
         if(typeof Rollbar !== "undefined") {
           Rollbar.info("No results", {
             address: $scope.user.address

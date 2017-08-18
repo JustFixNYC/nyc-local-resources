@@ -7,11 +7,15 @@
 * # cartoDB
 * Service in the localResourcesApp.
 */
+
+/*
+Performs queries to get list of resources from CARTO database
+*/
 angular.module('localResourcesApp')
 .service('CartoDB', [function () {
-  var cartoSQL = new cartodb.SQL({ user: 'mayuka' }); //change user here
-  var locations_database = 'nyc_cbos_locations_master_9_14_17'; //name of carto database with locations
-  var catchment_database = 'final_nyc_cbos_service_areas_copy_new_entries_copy'; //name of carto database with service areas
+  var cartoSQL = new cartodb.SQL({ user: 'mayuka' }); //change user here if necessary
+  var locations_database = 'nyc_cbos_locations_master_9_14_17'; //carto database with locations
+  var catchment_database = 'final_nyc_cbos_service_areas_copy_new_entries_copy'; //carto database with service areas
 
   /* public functions */
   return {
@@ -64,13 +68,8 @@ angular.module('localResourcesApp')
       //check if address is in catchment area of organization
       query += "WHERE ST_Intersects( ST_GeomFromText( 'Point(" + lng + " " + lat + ")', 4326 ), sa.the_geom ) ";
 
-
+      //Existing requirements logic only works when there is a single requirement listed for an organization - this logic should be fixed
       query += "AND (position(loc.requirements in '" +userTagString+ "') != 0 OR loc.requirements = '') ";
-
-      /*for (tag in userTags) {
-        query += "CASE "
-        query += "WHEN SUBSTRING(loc.requirements, )"
-      }*/
 
       //matches organizations between location and service area database by name
       query += "AND loc.organization = sa.organization ";
