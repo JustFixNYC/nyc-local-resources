@@ -13,9 +13,9 @@ Performs queries to get list of resources from CARTO database
 */
 angular.module('localResourcesApp')
 .service('CartoDB', [function () {
-  var cartoSQL = new cartodb.SQL({ user: 'mayuka' }); //change user here if necessary
-  var locations_database = 'nyc_cbos_locations_master_9_14_17'; //carto database with locations
-  var catchment_database = 'final_nyc_cbos_service_areas_copy_new_entries_copy'; //carto database with service areas
+  var cartoSQL = new cartodb.SQL({ user: 'justfixnyc' }); //change user here if necessary
+  var locations_database = 'nyc_cbos_locations'; //carto database with locations
+  var catchment_database = 'nyc_cbos_service_areas'; //carto database with service areas
 
   /* public functions */
   return {

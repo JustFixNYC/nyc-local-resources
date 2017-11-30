@@ -59,11 +59,11 @@ angular.module('localResourcesApp')
 
       /*** init carto layers ***/
       var layerSource = {
-        user_name: 'mayuka',
+        user_name: 'justfixnyc',
         type: 'cartodb',
 
         sublayers: [{
-          sql: "SELECT * FROM nyc_cbos_locations_final",
+          sql: "SELECT * FROM nyc_cbos_locations",
           cartocss: "#nyc_cbos_locations_final{marker-fill-opacity:.9;marker-line-color:#FFF;marker-line-width:1;marker-line-opacity:1;marker-placement:point;marker-type:ellipse;marker-width:10;marker-fill:#5F4690;marker-allow-overlap:true}#layer[org_type='community']{marker-fill:#CD4968;}#layer[org_type='legal']{marker-fill:#FD7603;}#layer[org_type='govt']{marker-fill:#0096D7;}"
         }]
       };
@@ -81,8 +81,8 @@ angular.module('localResourcesApp')
       });
 
       scope.updateCartoMap = function(lat, lng, orgType, housingCourt, userTags) {
-        var locations_database = 'nyc_cbos_locations_master_9_14_17'; //name of carto database with locations
-        var catchment_database = 'final_nyc_cbos_service_areas_copy_new_entries_copy'; //name of carto database with service areas
+        var locations_database = 'nyc_cbos_locations'; //name of carto database with locations
+        var catchment_database = 'nyc_cbos_service_areas'; //name of carto database with service areas
         var orgString = orgType.toString();
         var housingCourtStatusQuery = housingCourt ? ' AND loc.housing_court = true' : '';
         var userTagString = userTags.toString();
